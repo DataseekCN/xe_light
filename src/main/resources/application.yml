@@ -2,12 +2,12 @@ server:
   port: 12006
 xe:
   driver: com.mysql.jdbc.Driver
-  jdbc_url: jdbc:mysql://127.0.0.1:3306/xero?useUnicode=true&characterEncoding=utf8
-  db_username: test
-  db_password: test
-  initialSize: 6
-  maxActive: 4
-  maxIdle: 2
+  jdbc_url: jdbc:mysql://47.101.53.114:3306/xero?useUnicode=true&characterEncoding=utf8&useSSL=false
+  db_username: root
+  db_password: DataSeek@2019
+  initialSize: 20
+  maxActive: 30
+  maxIdle: 10
   minIdle: 1
   maxWait: 60000
   timeBetweenEvictionRunsMillis: 3000
