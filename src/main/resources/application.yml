@@ -3,9 +3,9 @@ server:
 druid:
   driver: com.mysql.jdbc.Driver
   jdbc:
-    url: jdbc:mysql://47.101.53.114:3306/xero?useUnicode=true&characterEncoding=utf8
+    url: jdbc:mysql://127.0.0.1:3306/xero?useUnicode=true&characterEncoding=utf8
     username: root
-    password: Fengjun666
+    password: test
   initialSize: 2
   maxActive: 4
   maxIdle: 2
