@@ -1,0 +1,16 @@
+server:
+  port: 12006
+druid:
+  driver: com.mysql.jdbc.Driver
+  jdbc:
+    url: jdbc:mysql://47.101.53.114:3306/xero?useUnicode=true&characterEncoding=utf8
+    username: root
+    password: Fengjun666
+  initialSize: 2
+  maxActive: 4
+  maxIdle: 2
+  minIdle: 1
+  maxWait: 60000
+  timeBetweenEvictionRunsMillis: 3000
+  minEvictableIdleTimeMillis: 300000
+  maxPoolPreparedStatementPerConnectionSize: 20
