@@ -1,11 +1,9 @@
 package com.dataseek.xe.service;
 
-import com.dataseek.xe.entity.TestUser;
+import com.dataseek.xe.entity.UserInfo;
 
-public class IUserService {
+public interface IUserService {
 
-
-
-    public void insertUser(String firstName, String lastName, String email, String password);
+    public void insertUser(UserInfo userInfo);
 
 }

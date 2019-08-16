@@ -10,6 +10,8 @@ public class UserInfo {
 
     private String password;
 
+    private String active;
+
     public String getFirstName() {
         return firstName;
     }
@@ -40,5 +42,13 @@ public class UserInfo {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getActive() {
+        return active;
+    }
+
+    public void setActive(String active) {
+        this.active = active;
     }
 }

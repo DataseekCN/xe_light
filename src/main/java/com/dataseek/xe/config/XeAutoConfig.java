@@ -29,13 +29,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-@org.springframework.context.annotation.Configuration
+@Configuration
 @EnableConfigurationProperties(XeProperties.class)
 public class XeAutoConfig {
     @Autowired
     private XeProperties xeProperties;
+
 
     @Bean(name="xeDataSource")
     public DruidDataSource initBasicDataSource(){
@@ -58,5 +60,11 @@ public class XeAutoConfig {
         JdbcTemplate xeJdbcTemplate = new JdbcTemplate();
         xeJdbcTemplate.setDataSource(xeDataSource);
         return xeJdbcTemplate;
+    }
+
+    @Bean(name = "jdbcSupport1")
+    @Qualifier("jdbcSupport1")
+    public JdbcSupport jdbcSupport(@Qualifier("xeDataSource") DruidDataSource dataSource) {
+        return new JdbcSupport(dataSource);
     }
 }

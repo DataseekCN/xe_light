@@ -1,7 +1,9 @@
 package com.dataseek.xe.dao;
 
-public class IUserDao {
+import com.dataseek.xe.entity.UserInfo;
 
-    public void insertUser();
+public interface IUserDao {
+
+    public void insertUser(UserInfo userInfo);
 
 }
