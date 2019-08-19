@@ -37,6 +37,7 @@
         <druid.version>1.1.12</druid.version>
         <fastjson.version>1.2.58</fastjson.version>
         <okhttp.version>3.14.2</okhttp.version>
+        <scribejava-apis.version>6.8.0</scribejava-apis.version>
     </properties>
 
     <dependencies>
@@ -90,6 +91,41 @@
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
             <version>${okhttp.version}</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.9</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/net.oauth.core/oauth -->
+        <dependency>
+            <groupId>net.oauth.core</groupId>
+            <artifactId>oauth</artifactId>
+            <version>20090617</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/net.oauth.core/oauth-provider -->
+        <dependency>
+            <groupId>net.oauth.core</groupId>
+            <artifactId>oauth-provider</artifactId>
+            <version>20090531</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/net.oauth.core/oauth-httpclient4 -->
+        <dependency>
+            <groupId>net.oauth.core</groupId>
+            <artifactId>oauth-httpclient4</artifactId>
+            <version>20090913</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/net.oauth.core/oauth-consumer -->
+        <dependency>
+            <groupId>net.oauth.core</groupId>
+            <artifactId>oauth-consumer</artifactId>
+            <version>20090617</version>
         </dependency>
 
     </dependencies>

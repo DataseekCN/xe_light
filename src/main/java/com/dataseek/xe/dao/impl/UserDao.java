@@ -3,7 +3,6 @@ package com.dataseek.xe.dao.impl;
 import com.dataseek.xe.config.JdbcSupport;
 import com.dataseek.xe.dao.IUserDao;
 import com.dataseek.xe.entity.UserInfo;
-import com.dataseek.xe.util.SpringUtils;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +12,7 @@ public class UserDao implements IUserDao {
     private JdbcSupport jdbcSupport = null;
 
     public UserDao() {
-        this.jdbcSupport = (JdbcSupport) SpringUtils.getBean("jdbcSupport1");
+//        this.jdbcSupport = (JdbcSupport) SpringUtils.getBean("jdbcSupport1");
     }
 
     public void insertUser(UserInfo userInfo) {
