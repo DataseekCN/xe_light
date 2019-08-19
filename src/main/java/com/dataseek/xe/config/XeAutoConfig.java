@@ -27,16 +27,27 @@ package com.dataseek.xe.config;
 import com.alibaba.druid.pool.DruidDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableConfigurationProperties(XeProperties.class)
 public class XeAutoConfig {
     @Autowired
     private XeProperties xeProperties;
+
+    @Bean(name = "dataSource")
+    @Qualifier("dataSource")
+    @ConfigurationProperties(prefix = "spring.datasource")
+    public DataSource dataSource() {
+        return DataSourceBuilder.create().build();
+    }
 
 
     @Bean(name="xeDataSource")
@@ -62,9 +73,9 @@ public class XeAutoConfig {
         return xeJdbcTemplate;
     }
 
-    @Bean(name = "jdbcSupport1")
-    @Qualifier("jdbcSupport1")
-    public JdbcSupport jdbcSupport(@Qualifier("xeDataSource") DruidDataSource dataSource) {
+    @Bean(name = "jdbcSupportBase")
+    @Qualifier("jdbcSupportBase")
+    public JdbcSupport jdbcSupport(@Qualifier("dataSource") DataSource dataSource) {
         return new JdbcSupport(dataSource);
     }
 }
