@@ -1,5 +1,6 @@
 package com.dataseek.xe.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dataseek.xe.entity.TestUser;
 import com.dataseek.xe.service.ITestService;
 import com.dataseek.xe.util.XeConsts;
@@ -25,5 +26,12 @@ public class TestController {
             testUserVo.setError_message("用户名已经存在!");
         }
         return testUserVo;
+    }
+
+    @RequestMapping(value="/verify_user_exist",method = RequestMethod.GET)
+    private JSONObject verifyEtsyBindingExists(@RequestParam String email){
+        JSONObject jsonObject = new JSONObject();
+
+        return jsonObject;
     }
 }
