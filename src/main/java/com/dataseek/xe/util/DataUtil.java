@@ -21,9 +21,9 @@ public class DataUtil {
      * @return
      */
     public static boolean isEmpty(String inputStr) {
-        boolean reValue = true;
+        boolean reValue = false;
         if (inputStr == "" || inputStr == null) {
-            reValue = false;
+            reValue = true;
         }
         return reValue;
     }
