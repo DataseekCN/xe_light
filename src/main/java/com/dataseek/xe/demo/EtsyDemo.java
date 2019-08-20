@@ -25,17 +25,15 @@ public class EtsyDemo {
         String consumerKey="78qwl864ty5269f469svn6md";
         String consumerSecret="xcalhsuznj";
         OAuthServiceProvider provider = new OAuthServiceProvider(REQUEST_TOKEN_URL,AUTHORIZE_URL,ACCESS_TOKEN_URL);
-        OAuthConsumer consumer = new OAuthConsumer("http://www.163.com",consumerKey,consumerSecret,provider);
+        OAuthConsumer consumer = new OAuthConsumer("http://localhost:8080/greeting",consumerKey,consumerSecret,provider);
         OAuthAccessor accessor = new OAuthAccessor(consumer);
         OAuthClient client = new OAuthClient(new HttpClient4());
         List<OAuth.Parameter> parameters = new ArrayList<OAuth.Parameter>();
-        parameters.add(new OAuth.Parameter("oauth_callback", "http://www.163.com"));
+        parameters.add(new OAuth.Parameter("oauth_callback", consumer.callbackURL));
         OAuthMessage msg = client.getRequestTokenResponse(accessor,
                 "POST", parameters);
         String login_url = msg.getParameter("login_url");
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("oauth_callback",msg.getParameter(OAuth.OAUTH_CALLBACK)));
-        String param_url = EntityUtils.toString(new UrlEncodedFormEntity(params, Consts.UTF_8));
-        System.out.println(login_url+"&"+param_url);
+//        String param_url = EntityUtils.toString(new UrlEncodedFormEntity(params, Consts.UTF_8));
+        System.out.println(login_url);
     }
 }
