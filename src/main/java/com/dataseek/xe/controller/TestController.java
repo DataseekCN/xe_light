@@ -28,7 +28,7 @@ public class TestController {
         return testUserVo;
     }
 
-    @RequestMapping(value="/verify_user_exist",method = RequestMethod.GET)
+    @RequestMapping(value="/verify_user_exist1",method = RequestMethod.GET)
     private JSONObject verifyEtsyBindingExists(@RequestParam String email){
         JSONObject jsonObject = new JSONObject();
 
