@@ -28,9 +28,11 @@ public class TestController {
         return testUserVo;
     }
 
-    @RequestMapping(value="/verify_user_exist",method = RequestMethod.GET)
-    private JSONObject verifyEtsyBindingExists(@RequestParam String email){
+    @RequestMapping(value="/etsy_authorize",method = RequestMethod.GET)
+    private JSONObject etsyAuthorize(@RequestParam String account){
         JSONObject jsonObject = new JSONObject();
+        //判定etsy账户是否存在绑定关系
+        //判定是否已申请oauthToken
 
         return jsonObject;
     }
