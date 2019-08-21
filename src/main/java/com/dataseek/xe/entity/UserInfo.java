@@ -1,7 +1,6 @@
 package com.dataseek.xe.entity;
 
 public class UserInfo {
-
     private String firstName;
 
     private String lastName;
@@ -11,6 +10,16 @@ public class UserInfo {
     private String password;
 
     private String active;
+
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public String getFirstName() {
         return firstName;
