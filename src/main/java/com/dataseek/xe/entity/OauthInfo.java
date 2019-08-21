@@ -29,5 +29,14 @@ public class OauthInfo {
     private String authorize_url;
     //授权状态
     private String authorize_status;
+    //应用帐号
+    private String app_account;
+    //Etsy帐号
+    private String etsy_account;
+    //oauth_consumer_key
+    private String oauth_consumer_key;
+    //oauth_consumer_secret
+    private String oauth_consumer_secret;
+    //request
 
 }
