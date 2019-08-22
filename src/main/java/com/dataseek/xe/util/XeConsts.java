@@ -1,6 +1,8 @@
 package com.dataseek.xe.util;
 
 public class XeConsts {
+    //app开发者账户名
+    public static final String APP_DEVELOPER_ACCOUNT="etsy@dataseek.info";
     //请求业务状态-success
     public static final String RESPONSE_STATUS_SUCCESS="success";
     //请求业务状态-failure

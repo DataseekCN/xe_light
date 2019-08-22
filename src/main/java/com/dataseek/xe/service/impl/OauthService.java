@@ -26,7 +26,9 @@ package com.dataseek.xe.service.impl;
 
 import com.dataseek.xe.dao.IOauthDao;
 import com.dataseek.xe.entity.EtsyAccountBind;
+import com.dataseek.xe.entity.EtsyDeveloperDetail;
 import com.dataseek.xe.entity.OauthInfo;
+import com.dataseek.xe.extend.apis.EtsyApi;
 import com.dataseek.xe.service.IOauthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,14 +44,17 @@ public class OauthService implements IOauthService {
     @Transactional(propagation = Propagation.REQUIRED)
     public OauthInfo verifyEtsyAuthStatus(String app_account,String etsy_account){
         OauthInfo oauthInfo = new OauthInfo();
+        //查询App开发者相关配置信息
+        EtsyDeveloperDetail etsyDeveloperDetail = oauthDao.queryEtsyDeveloperDetail();
         //验证是否存在etsy账户与app应用账户绑定关系
         EtsyAccountBind accountBind = oauthDao.queryBindRecordByAppEtsy(app_account,etsy_account);
         Integer bind_id = accountBind.getBind_id();
         //etsy帐号与应用帐号未绑定
         if(bind_id==null){
             //将应用帐号与etsy帐号进行绑定
-
-            //返回authorize url
+            oauthDao.insertAppEtsyBind(app_account,etsy_account);
+            //返回login url
+            String login_url = EtsyApi.requestAuthorizeUrl(etsyDeveloperDetail);
 
         }
         //etsy帐号与应用帐号已绑定
@@ -61,5 +66,6 @@ public class OauthService implements IOauthService {
     }
 
     //申请etsy authorize url
+
 
 }
