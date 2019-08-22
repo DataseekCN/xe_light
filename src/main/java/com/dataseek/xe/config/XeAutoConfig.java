@@ -62,7 +62,7 @@ public class XeAutoConfig {
         basicDataSource.setMinIdle(xeProperties.getMinIdle());
         basicDataSource.setValidationQuery("select now() ");
         basicDataSource.setTestOnBorrow(true);
-        basicDataSource.setDefaultAutoCommit(false);
+        basicDataSource.setDefaultAutoCommit(true);
         return basicDataSource;
     }
 
