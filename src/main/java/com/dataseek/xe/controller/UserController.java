@@ -7,6 +7,8 @@ import com.dataseek.xe.service.IUserService;
 import com.dataseek.xe.util.DataUtil;
 import com.dataseek.xe.util.ResponseDto;
 import com.dataseek.xe.util.XeConsts;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Api(value ="UserController")
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -24,6 +27,7 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
+    @ApiOperation(value = "sign up")
     @RequestMapping("/signup")
     public ResponseDto signup(@RequestBody JSONObject json) {
         ResponseDto responseDto = new ResponseDto();
