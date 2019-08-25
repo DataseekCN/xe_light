@@ -27,8 +27,8 @@ package com.dataseek.xe.entity;
 public class EtsyTokenAdmin {
     //记录id
     private Integer admin_id;
-    //帐号绑定关系id
-    private Integer bind_id;
+    //APP账户名
+    private String app_account;
     //request_token
     private String request_token;
     //request_secret
@@ -48,12 +48,12 @@ public class EtsyTokenAdmin {
         this.admin_id = admin_id;
     }
 
-    public Integer getBind_id() {
-        return bind_id;
+    public String getApp_account() {
+        return app_account;
     }
 
-    public void setBind_id(Integer bind_id) {
-        this.bind_id = bind_id;
+    public void setApp_account(String app_account) {
+        this.app_account = app_account;
     }
 
     public String getRequest_token() {

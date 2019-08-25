@@ -33,8 +33,6 @@ public class EtsyDemo {
         parameters.add(new OAuth.Parameter("oauth_callback", consumer.callbackURL));
         OAuthMessage msg = client.getRequestTokenResponse(accessor,
                 "POST", parameters);
-        OAuthSignatureMethod method = OAuthSignatureMethod.newSigner(msg,accessor);
-        
         String login_url = msg.getParameter("login_url");
 //        String param_url = EntityUtils.toString(new UrlEncodedFormEntity(params, Consts.UTF_8));
         System.out.println(login_url);

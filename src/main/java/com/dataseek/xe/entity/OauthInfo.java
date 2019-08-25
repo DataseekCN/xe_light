@@ -29,16 +29,14 @@ public class OauthInfo {
     private String authorize_url;
     //授权状态
     private String authorize_status;
-    //etsy和app账户绑定关系id
-    private Integer bind_id;
     //oauth_consumer_key
     private String oauth_consumer_key;
     //oauth_consumer_secret
     private String oauth_consumer_secret;
-    //request_token
-    private String request_token;
-    //request_secret
-    private String request_secret;
+    //oauth_token
+    private String oauth_token;
+    //oauth_secret
+    private String oauth_secret;
     //access_token
     private String access_token;
     //access_secret
@@ -78,20 +76,20 @@ public class OauthInfo {
         this.oauth_consumer_secret = oauth_consumer_secret;
     }
 
-    public String getRequest_token() {
-        return request_token;
+    public String getOauth_token() {
+        return oauth_token;
     }
 
-    public void setRequest_token(String request_token) {
-        this.request_token = request_token;
+    public void setOauth_token(String oauth_token) {
+        this.oauth_token = oauth_token;
     }
 
-    public String getRequest_secret() {
-        return request_secret;
+    public String getOauth_secret() {
+        return oauth_secret;
     }
 
-    public void setRequest_secret(String request_secret) {
-        this.request_secret = request_secret;
+    public void setOauth_secret(String oauth_secret) {
+        this.oauth_secret = oauth_secret;
     }
 
     public String getAccess_token() {
@@ -118,11 +116,4 @@ public class OauthInfo {
         this.update_time = update_time;
     }
 
-    public Integer getBind_id() {
-        return bind_id;
-    }
-
-    public void setBind_id(Integer bind_id) {
-        this.bind_id = bind_id;
-    }
 }
