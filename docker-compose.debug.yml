@@ -1,0 +1,14 @@
+version: '2.1'
+
+services:
+  xe_light:
+    image: xe_light
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005,quiet=y
+    ports:
+      - 12006:12006
+      - 5005:5005
+    

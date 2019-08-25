@@ -1,0 +1,8 @@
+version: '2.1'
+
+services:
+  xe_light:
+    image: xe_light
+    build: .
+    ports:
+      - 12006:12006
