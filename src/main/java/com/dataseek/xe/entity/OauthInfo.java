@@ -26,30 +26,42 @@ package com.dataseek.xe.entity;
 //认证实体信息
 public class OauthInfo {
     //授权地址
-    private String authorize_url;
+    private String grant_url;
     //授权状态
     private String authorize_status;
-    //oauth_consumer_key
-    private String oauth_consumer_key;
-    //oauth_consumer_secret
-    private String oauth_consumer_secret;
-    //oauth_token
-    private String oauth_token;
-    //oauth_secret
-    private String oauth_secret;
+    //consumer_key
+    private String consumer_key;
+    //consumer_secret
+    private String consumer_secret;
+    //request_token
+    private String request_token;
+    //request_secret
+    private String request_secret;
+    //oauth_verifier
+    private String oauth_verifier;
     //access_token
     private String access_token;
     //access_secret
     private String access_secret;
+    //授权状态流程
+    private String auth_status;
     //更新时间
     private String update_time;
 
-    public String getAuthorize_url() {
-        return authorize_url;
+    public String getGrant_url() {
+        return grant_url;
     }
 
-    public void setAuthorize_url(String authorize_url) {
-        this.authorize_url = authorize_url;
+    public String getOauth_verifier() {
+        return oauth_verifier;
+    }
+
+    public void setOauth_verifier(String oauth_verifier) {
+        this.oauth_verifier = oauth_verifier;
+    }
+
+    public void setGrant_url(String grant_url) {
+        this.grant_url = grant_url;
     }
 
     public String getAuthorize_status() {
@@ -60,36 +72,36 @@ public class OauthInfo {
         this.authorize_status = authorize_status;
     }
 
-    public String getOauth_consumer_key() {
-        return oauth_consumer_key;
+    public String getConsumer_key() {
+        return consumer_key;
     }
 
-    public void setOauth_consumer_key(String oauth_consumer_key) {
-        this.oauth_consumer_key = oauth_consumer_key;
+    public void setConsumer_key(String consumer_key) {
+        this.consumer_key = consumer_key;
     }
 
-    public String getOauth_consumer_secret() {
-        return oauth_consumer_secret;
+    public String getConsumer_secret() {
+        return consumer_secret;
     }
 
-    public void setOauth_consumer_secret(String oauth_consumer_secret) {
-        this.oauth_consumer_secret = oauth_consumer_secret;
+    public void setConsumer_secret(String consumer_secret) {
+        this.consumer_secret = consumer_secret;
     }
 
-    public String getOauth_token() {
-        return oauth_token;
+    public String getRequest_token() {
+        return request_token;
     }
 
-    public void setOauth_token(String oauth_token) {
-        this.oauth_token = oauth_token;
+    public void setRequest_token(String request_token) {
+        this.request_token = request_token;
     }
 
-    public String getOauth_secret() {
-        return oauth_secret;
+    public String getRequest_secret() {
+        return request_secret;
     }
 
-    public void setOauth_secret(String oauth_secret) {
-        this.oauth_secret = oauth_secret;
+    public void setRequest_secret(String request_secret) {
+        this.request_secret = request_secret;
     }
 
     public String getAccess_token() {
@@ -116,4 +128,11 @@ public class OauthInfo {
         this.update_time = update_time;
     }
 
+    public String getAuth_status() {
+        return auth_status;
+    }
+
+    public void setAuth_status(String auth_status) {
+        this.auth_status = auth_status;
+    }
 }

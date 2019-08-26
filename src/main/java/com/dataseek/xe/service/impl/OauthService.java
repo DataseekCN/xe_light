@@ -25,15 +25,17 @@
 package com.dataseek.xe.service.impl;
 
 import com.dataseek.xe.dao.IOauthDao;
-import com.dataseek.xe.entity.EtsyAccountBind;
 import com.dataseek.xe.entity.EtsyDeveloperDetail;
+import com.dataseek.xe.entity.EtsyTokenAdmin;
 import com.dataseek.xe.entity.OauthInfo;
-import com.dataseek.xe.extend.apis.EtsyApi;
+import com.dataseek.xe.extend.apis.EtsyVisitApi;
 import com.dataseek.xe.service.IOauthService;
+import com.dataseek.xe.util.XeConsts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 public class OauthService implements IOauthService {
@@ -42,30 +44,54 @@ public class OauthService implements IOauthService {
 
     //验证Etsy的oauth授权情况
     @Transactional(propagation = Propagation.REQUIRED)
-    public OauthInfo verifyEtsyAuthStatus(String app_account,String etsy_account){
-        OauthInfo oauthInfo = new OauthInfo();
+    public OauthInfo verifyEtsyAuthStatus(String app_account){
+        OauthInfo oauthInfo = null;
         //查询App开发者相关配置信息
         EtsyDeveloperDetail etsyDeveloperDetail = oauthDao.queryEtsyDeveloperDetail();
-        //验证是否存在etsy账户与app应用账户绑定关系
-        EtsyAccountBind accountBind = oauthDao.queryBindRecordByAppEtsy(app_account,etsy_account);
-        Integer bind_id = accountBind.getBind_id();
-        //etsy帐号与应用帐号未绑定
-        if(bind_id==null){
-            //将应用帐号与etsy帐号进行绑定
-            oauthDao.insertAppEtsyBind(app_account,etsy_account);
-            //返回login url
-            String login_url = EtsyApi.requestAuthorizeUrl(etsyDeveloperDetail);
+        //验证app账户下是否存在oauth_token
+        EtsyTokenAdmin etsyTokenAdmin = oauthDao.queryEtsyTokenAdminByAppAccount(app_account);
+        if(etsyTokenAdmin!=null){
+            //查询该账户下的access token
+            String access_token = etsyTokenAdmin.getAccess_token();
+            //access_token是否存在?
+            //未申请access_token
+            if(StringUtils.isEmpty(access_token)){
+                //申请request token
+                oauthInfo=applyRequestToken(app_account,etsyDeveloperDetail);
+            }
+            //已申请access_token
+            else{
+                //验证token有效性
 
+            }
         }
-        //etsy帐号与应用帐号已绑定
+        //未申请access_token
         else{
-            //验证是否已经申请access token和access secret
+            //申请access_token
+            oauthInfo=applyRequestToken(app_account,etsyDeveloperDetail);
+            //验证token有效性
 
         }
-        return  oauthInfo;
+        return oauthInfo;
     }
 
-    //申请etsy authorize url
+
+    //申请request token并返回授权链接等信息
+    @Transactional(propagation = Propagation.REQUIRED)
+    public OauthInfo applyRequestToken(String app_account,EtsyDeveloperDetail etsyDeveloperDetail){
+        OauthInfo oauthInfo = null;
+        //申请request token
+        oauthInfo = EtsyVisitApi.fetchRequestInfo(etsyDeveloperDetail);
+        //设置授权状态为待授权
+        oauthInfo.setAuth_status(XeConsts.AUTH_STATUS_WAIT_AUTHORIZE);
+        String request_token = oauthInfo.getRequest_token();
+        String request_secret = oauthInfo.getRequest_secret();
+        //根据开发者帐号,保存request_token和request_secret
+        oauthDao.deleteEtsyTokenAdminByAppAccount(app_account);
+        oauthDao.insertReqTokenAndSecretWithAppAccount(app_account,request_token,request_secret);
+        return oauthInfo;
+    }
+
 
 
 }

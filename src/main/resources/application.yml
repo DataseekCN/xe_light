@@ -2,9 +2,9 @@ server:
   port: 12006
 xe:
   driver: com.mysql.jdbc.Driver
-  jdbc_url: jdbc:mysql://127.0.0.1:3306/xero?useUnicode=true&characterEncoding=utf8&useSSL=false
+  jdbc_url: jdbc:mysql://47.101.53.114:3606/xero?useUnicode=true&characterEncoding=utf8&useSSL=false
   db_username: root
-  db_password: test
+  db_password: Dataseek@2019
   initialSize: 20
   maxActive: 30
   maxIdle: 10

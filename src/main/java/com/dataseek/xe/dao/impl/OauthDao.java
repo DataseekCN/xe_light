@@ -27,11 +27,13 @@ package com.dataseek.xe.dao.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dataseek.xe.dao.IOauthDao;
-import com.dataseek.xe.entity.EtsyAccountBind;
 import com.dataseek.xe.entity.EtsyDeveloperDetail;
 import com.dataseek.xe.entity.EtsyTokenAdmin;
 import com.dataseek.xe.mapper.JSONObjectMapper;
+import com.dataseek.xe.util.DateUtil;
 import com.dataseek.xe.util.XeConsts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -40,6 +42,7 @@ import java.util.List;
 
 @Repository
 public class OauthDao implements IOauthDao {
+    private final static Logger logger = LoggerFactory.getLogger(OauthDao.class);
     @Autowired
     private JdbcTemplate xeJdbcTemplate;
     //查询相关开发配置信息
@@ -74,14 +77,14 @@ public class OauthDao implements IOauthDao {
         return etsyTokenAdmin;
     }
 
-    //根据request_token和request_secret查询etsy用户token管理信息
-    public EtsyTokenAdmin queryEtsyTokenAdminByTokenAndSecret(String request_token,String request_secret){
+    //根据request_token查询etsy用户token管理信息
+    public EtsyTokenAdmin queryEtsyTokenAdminByReqToken(String request_token,String request_secret){
         EtsyTokenAdmin etsyTokenAdmin = null;
         String query_sql = " select admin_id,app_account,request_token,request_secret, " +
                 " access_token,access_secret,update_time " +
                 " from xero.etsy_token_admin " +
-                " where request_token=? and request_secret=? ";
-        Object[] params = new Object[]{request_token,request_secret};
+                " where request_token=?  ";
+        Object[] params = new Object[]{request_token};
         List<JSONObject> detailJsons = xeJdbcTemplate.query(query_sql,params,new JSONObjectMapper());
         if(detailJsons!=null&&detailJsons.size()>0) {
             JSONObject detailJson = detailJsons.get(0);
@@ -90,7 +93,25 @@ public class OauthDao implements IOauthDao {
         return etsyTokenAdmin;
     }
 
-    //根据request token和request secret更新access token和access_secret
+    //根据app帐号删除token管理记录
+    public void deleteEtsyTokenAdminByAppAccount(String app_account){
+        String delete_sql = " delete from xero.etsy_token_admin " +
+                " where app_account=?  ";
+        Object[] params = new Object[]{app_account};
+        xeJdbcTemplate.update(delete_sql,params);
+        logger.info("token record has been deleted!");
+    }
 
+    //根据APP帐号新增token记录,主要包含request token和request secret
+    public void insertReqTokenAndSecretWithAppAccount(String app_account,String request_token,String request_secret){
+        String access_token="";
+        String access_secret="";
+        String update_time= DateUtil.getNowTime_EN();
+        String insert_sql = " insert into xero.etsy_token_admin(app_account,request_token,request_secret,access_token,access_secret,update_time) " +
+                " values(?,?,?,?,?,?) ";
+        Object[] params = new Object[]{app_account,request_token,request_secret,access_token,access_secret,update_time};
+        xeJdbcTemplate.update(insert_sql,params);
+        logger.info("token record has been deleted!");
+    }
 
 }

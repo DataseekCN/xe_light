@@ -31,8 +31,7 @@ public class TestController {
     @RequestMapping(value="/etsy_authorize",method = RequestMethod.GET)
     private JSONObject etsyAuthorize(@RequestParam String account){
         JSONObject jsonObject = new JSONObject();
-        //判定etsy账户是否存在绑定关系
-        //判定是否已申请oauthToken
+        //验证oauth_token状态
 
         return jsonObject;
     }
