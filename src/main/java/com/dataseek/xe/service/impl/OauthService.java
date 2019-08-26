@@ -24,7 +24,9 @@
  */
 package com.dataseek.xe.service.impl;
 
+import com.dataseek.xe.config.XeAutoConfig;
 import com.dataseek.xe.dao.IOauthDao;
+import com.dataseek.xe.dao.impl.OauthDao;
 import com.dataseek.xe.entity.EtsyDeveloperDetail;
 import com.dataseek.xe.entity.EtsyTokenAdmin;
 import com.dataseek.xe.entity.OauthInfo;
@@ -36,6 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 public class OauthService implements IOauthService {
@@ -43,7 +46,7 @@ public class OauthService implements IOauthService {
     private IOauthDao oauthDao;
 
     //验证Etsy的oauth授权情况
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(value= XeAutoConfig.DEFAULT_TX, rollbackFor=Exception.class)
     public OauthInfo verifyEtsyAuthStatus(String app_account){
         OauthInfo oauthInfo = null;
         //查询App开发者相关配置信息
@@ -53,6 +56,8 @@ public class OauthService implements IOauthService {
         if(etsyTokenAdmin!=null){
             //查询该账户下的access token
             String access_token = etsyTokenAdmin.getAccess_token();
+            //查询该账户下的access token
+            String access_secret = etsyTokenAdmin.getAccess_secret();
             //access_token是否存在?
             //未申请access_token
             if(StringUtils.isEmpty(access_token)){
@@ -62,22 +67,25 @@ public class OauthService implements IOauthService {
             //已申请access_token
             else{
                 //验证token有效性
-
+                //设置已授权状态
+                oauthInfo = new OauthInfo();
+                oauthInfo.setAuth_status(XeConsts.AUTH_STATUS_AUTHORIZED);
+                oauthInfo.setAccess_token(access_token);
+                oauthInfo.setAccess_secret(access_secret);
             }
         }
         //未申请access_token
         else{
-            //申请access_token
+            //申请request_token
             oauthInfo=applyRequestToken(app_account,etsyDeveloperDetail);
             //验证token有效性
-
         }
         return oauthInfo;
     }
 
 
     //申请request token并返回授权链接等信息
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(value= XeAutoConfig.DEFAULT_TX, rollbackFor=Exception.class)
     public OauthInfo applyRequestToken(String app_account,EtsyDeveloperDetail etsyDeveloperDetail){
         OauthInfo oauthInfo = null;
         //申请request token
@@ -92,6 +100,20 @@ public class OauthService implements IOauthService {
         return oauthInfo;
     }
 
-
+    //申请access token并返回授权链接等信息
+    @Transactional(value= XeAutoConfig.DEFAULT_TX, rollbackFor=Exception.class)
+    public OauthInfo applyAccessToken(String oauth_token,String oauth_verifier){
+        OauthInfo oauthInfo = null;
+        //查询App开发者相关配置信息
+        EtsyDeveloperDetail etsyDeveloperDetail = oauthDao.queryEtsyDeveloperDetail();
+        EtsyTokenAdmin etsyTokenAdmin = oauthDao.queryEtsyTokenAdminByReqToken(oauth_token);
+        OauthInfo paramOauthInfo = new OauthInfo();
+        paramOauthInfo.setRequest_token(etsyTokenAdmin.getRequest_token());
+        paramOauthInfo.setRequest_secret(etsyTokenAdmin.getRequest_secret());
+        paramOauthInfo.setOauth_verifier(oauth_verifier);
+        oauthInfo = EtsyVisitApi.fetchAccessInfo(etsyDeveloperDetail,paramOauthInfo);
+        oauthDao.updateAccessTokenAndSecretByRequestToken(oauthInfo);
+        return oauthInfo;
+    }
 
 }

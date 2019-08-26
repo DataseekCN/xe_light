@@ -32,7 +32,7 @@
         <project.encoding>UTF-8</project.encoding>
         <log4j.version>1.2.17</log4j.version>
         <fastjson.version>1.2.31</fastjson.version>
-        <spring-boot.version>1.4.1.RELEASE</spring-boot.version>
+        <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
         <mysql-connector.version>5.1.38</mysql-connector.version>
         <druid.version>1.1.12</druid.version>
         <fastjson.version>1.2.58</fastjson.version>

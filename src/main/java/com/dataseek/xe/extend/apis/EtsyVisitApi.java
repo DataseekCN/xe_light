@@ -111,9 +111,9 @@ public class EtsyVisitApi {
                 final OAuth1AccessToken accessToken = service.getAccessToken(requestToken, oauth_verifier);
                 String access_token = accessToken.getToken();
                 String access_secret = accessToken.getTokenSecret();
-                oauthInfo=new OauthInfo();
-                oauthInfo.setAccess_token(access_token);
-                oauthInfo.setAccess_secret(access_secret);
+                paramOauthInfo.setAccess_token(access_token);
+                paramOauthInfo.setAccess_secret(access_secret);
+                oauthInfo=paramOauthInfo;
             } catch (IOException e) {
                 logger.error(e.getMessage());
             } catch (InterruptedException e) {

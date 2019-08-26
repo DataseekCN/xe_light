@@ -24,5 +24,14 @@
  */
 package com.dataseek.xe.service;
 
+import com.dataseek.xe.entity.OauthInfo;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 public interface IOauthService {
+    //验证Etsy的oauth授权情况
+    public OauthInfo verifyEtsyAuthStatus(String app_account);
+
+    //申请access token并返回授权链接等信息
+    public OauthInfo applyAccessToken(String oauth_token,String oauth_verifier);
 }
