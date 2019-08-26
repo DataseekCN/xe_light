@@ -59,7 +59,7 @@ public class OauthDao implements IOauthDao {
     }
 
     //根据APP账户查询etsy用户token管理信息
-    public EtsyTokenAdmin queryEtsyTokenAdmin(String app_account){
+    public EtsyTokenAdmin queryEtsyTokenAdminByAppAccount(String app_account){
         EtsyTokenAdmin etsyTokenAdmin = null;
         String query_sql = " select admin_id,app_account,request_token,request_secret, " +
                 " access_token,access_secret,update_time " +
@@ -73,6 +73,24 @@ public class OauthDao implements IOauthDao {
         }
         return etsyTokenAdmin;
     }
+
+    //根据request_token和request_secret查询etsy用户token管理信息
+    public EtsyTokenAdmin queryEtsyTokenAdminByTokenAndSecret(String request_token,String request_secret){
+        EtsyTokenAdmin etsyTokenAdmin = null;
+        String query_sql = " select admin_id,app_account,request_token,request_secret, " +
+                " access_token,access_secret,update_time " +
+                " from xero.etsy_token_admin " +
+                " where request_token=? and request_secret=? ";
+        Object[] params = new Object[]{request_token,request_secret};
+        List<JSONObject> detailJsons = xeJdbcTemplate.query(query_sql,params,new JSONObjectMapper());
+        if(detailJsons!=null&&detailJsons.size()>0) {
+            JSONObject detailJson = detailJsons.get(0);
+            etsyTokenAdmin = JSON.parseObject(detailJson.toJSONString(), EtsyTokenAdmin.class);
+        }
+        return etsyTokenAdmin;
+    }
+
+    //根据request token和request secret更新access token和access_secret
 
 
 }

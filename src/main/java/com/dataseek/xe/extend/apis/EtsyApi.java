@@ -25,14 +25,15 @@
 package com.dataseek.xe.extend.apis;
 
 import com.dataseek.xe.entity.EtsyDeveloperDetail;
-import net.oauth.*;
-import net.oauth.client.OAuthClient;
-import net.oauth.client.httpclient4.HttpClient4;
+import com.github.scribejava.core.builder.ServiceBuilder;
+import com.github.scribejava.core.model.OAuth1RequestToken;
+import com.github.scribejava.core.oauth.OAuth10aService;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class EtsyApi {
     //返回Etsy用户权限访问确认地址
@@ -50,21 +51,20 @@ public class EtsyApi {
             //callback_url
             String callback_url = etsyDeveloperDetail.getCallback_url();
 
-            OAuthServiceProvider provider = new OAuthServiceProvider(request_token_url,authorize_url,access_token_url);
-            OAuthConsumer consumer = new OAuthConsumer(callback_url,consumer_key,consumer_secret,provider);
-            OAuthAccessor accessor = new OAuthAccessor(consumer);
-            OAuthClient client = new OAuthClient(new HttpClient4());
-            List<OAuth.Parameter> parameters = new ArrayList<OAuth.Parameter>();
-            parameters.add(new OAuth.Parameter("oauth_callback", consumer.callbackURL));
+            final OAuth10aService service = new ServiceBuilder(consumer_key)
+                    .apiSecret(consumer_secret)
+                    .callback(callback_url)
+                    .build(com.github.scribejava.apis.EtsyApi.instance());
             try {
-                OAuthMessage msg = client.getRequestTokenResponse(accessor,
-                        "POST", parameters);
-                final_authorize_url = msg.getParameter("login_url");
+                final OAuth1RequestToken requestToken = service.getRequestToken();
+                String request_token = requestToken.getToken();
+                String request_secret = requestToken.getTokenSecret();
+
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (OAuthException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
-            } catch (URISyntaxException e) {
+            } catch (ExecutionException e) {
                 e.printStackTrace();
             }
         }
