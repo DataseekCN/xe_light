@@ -22,7 +22,7 @@ public class OauthController {
 
 	//验证用户etsy的token状态
     @RequestMapping(value="/etsy/token_verify",method = RequestMethod.GET)
-    private JSONObject etsyTokenVerify(@RequestParam String app_account){
+    public JSONObject etsyTokenVerify(@RequestParam String app_account){
         OauthVo oauthVo = new OauthVo();
         JSONObject jsonObject = (JSONObject)JSON.toJSON(oauthVo);
         //验证授权状态
@@ -45,7 +45,7 @@ public class OauthController {
 	
 	//用户申请etsy的access token
     @RequestMapping(value="/etsy/token_apply",method = RequestMethod.GET)
-    private JSONObject etsyTokenApply(@RequestParam String oauth_token,@RequestParam String oauth_verifier){
+    public JSONObject etsyTokenApply(@RequestParam String oauth_token,@RequestParam String oauth_verifier){
         OauthVo oauthVo = new OauthVo();
         JSONObject jsonObject = (JSONObject)JSON.toJSON(oauthVo);
         OauthInfo oauthInfo = oauthService.applyAccessToken(oauth_token,oauth_verifier);
