@@ -90,13 +90,15 @@ public class OauthService implements IOauthService {
         OauthInfo oauthInfo = null;
         //申请request token
         oauthInfo = EtsyVisitApi.fetchRequestInfo(etsyDeveloperDetail);
-        //设置授权状态为待授权
-        oauthInfo.setAuth_status(XeConsts.AUTH_STATUS_WAIT_AUTHORIZE);
-        String request_token = oauthInfo.getRequest_token();
-        String request_secret = oauthInfo.getRequest_secret();
-        //根据开发者帐号,保存request_token和request_secret
-        oauthDao.deleteEtsyTokenAdminByAppAccount(app_account);
-        oauthDao.insertReqTokenAndSecretWithAppAccount(app_account,request_token,request_secret);
+       if(oauthInfo!=null) {
+           //设置授权状态为待授权
+           oauthInfo.setAuth_status(XeConsts.AUTH_STATUS_WAIT_AUTHORIZE);
+           String request_token = oauthInfo.getRequest_token();
+           String request_secret = oauthInfo.getRequest_secret();
+           //根据开发者帐号,保存request_token和request_secret
+           oauthDao.deleteEtsyTokenAdminByAppAccount(app_account);
+           oauthDao.insertReqTokenAndSecretWithAppAccount(app_account, request_token, request_secret);
+       }
         return oauthInfo;
     }
 
