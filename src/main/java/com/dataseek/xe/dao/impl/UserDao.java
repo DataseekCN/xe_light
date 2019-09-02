@@ -16,8 +16,8 @@ public class UserDao implements IUserDao {
 
     public void insertUser(UserInfo userInfo) {
         StringBuilder sqlBd = new StringBuilder();
-        sqlBd.append("insert into xe_user(first_name,last_name,email,password,active,user_id) ");
-        sqlBd.append("values(:first_name,:last_name,:email,:password,:active,:user_id)");
+        sqlBd.append("insert into xe_user(first_name,last_name,email,password,active,user_id,create_date) ");
+        sqlBd.append("values(:first_name,:last_name,:email,:password,:active,:user_id,sysdate())");
 
         MapSqlParameterSource mapParam = new MapSqlParameterSource();
         mapParam.addValue("first_name", userInfo.getFirstName());
