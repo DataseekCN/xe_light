@@ -13,3 +13,9 @@ xe:
   timeBetweenEvictionRunsMillis: 3000
   minEvictableIdleTimeMillis: 300000
   maxPoolPreparedStatementPerConnectionSize: 20
+spring:
+    datasource:
+        username: root
+        password: DataSeek@2019
+        jdbc-url: jdbc:mysql://47.101.53.114:3606/xero?useUnicode=true&characterEncoding=utf8&useSSL=false
+        driver-class-name: com.mysql.jdbc.Driver
