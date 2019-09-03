@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Api(value ="UserController")
 @RestController
 @RequestMapping("/user")
@@ -44,11 +46,21 @@ public class UserController {
             userDto.setUserId(userId);
 
             //校验
+            //email合法性校验
             if (!DataUtil.checkEmail(userDto.getEmail())) {
                 responseDto.setStatus(XeConsts.RESPONSE_STATUS_FAILURE);
                 responseDto.setError_message("email format error.");
                 return  responseDto;
             }
+
+            //email和password唯一性校验
+            List<String> tmpList = userService.qryUser(userDto.getEmail(), userDto.getPassword());
+            if (tmpList != null && !tmpList.isEmpty()) {
+                responseDto.setStatus(XeConsts.RESPONSE_STATUS_FAILURE);
+                responseDto.setError_message("email and password already exists.");
+                return  responseDto;
+            }
+
             userService.insertUser(userDto);
 
             responseDto.setStatus(XeConsts.RESPONSE_STATUS_SUCCESS);
@@ -61,5 +73,35 @@ public class UserController {
             responseDto.setError_message("signup error.");
             return  responseDto;
         }
+    }
+
+    @ApiOperation(value = "sign in")
+    @RequestMapping("/signin")
+    public ResponseDto signin(@RequestBody JSONObject json) {
+        ResponseDto responseDto = new ResponseDto();
+        try {
+            //MD5加密
+            String mdStr = DataUtil.EncoderByMd5(json.getString("password"));
+
+            List<String> tmpList = userService.qryUser(json.getString("email"), mdStr);
+            if (tmpList == null || tmpList.isEmpty()) {
+                responseDto.setStatus(XeConsts.RESPONSE_STATUS_FAILURE);
+                responseDto.setError_message("user does not exist.");
+                return  responseDto;
+            }
+
+            return  responseDto;
+        }
+        catch (Exception ex) {
+            logger.error(ex.toString(), ex);
+            responseDto.setStatus(XeConsts.RESPONSE_STATUS_FAILURE);
+            responseDto.setError_message("signup error.");
+            return  responseDto;
+        }
+
+
+
+
+
     }
 }

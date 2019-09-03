@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Repository
 public class UserDao implements IUserDao {
@@ -27,5 +28,12 @@ public class UserDao implements IUserDao {
         mapParam.addValue("active", userInfo.getActive());
         mapParam.addValue("user_id", userInfo.getUserId());
         jdbcSupport.update(sqlBd.toString(), mapParam);
+    }
+
+    public List<String> qryUser(String email, String psw) {
+
+        String sql = "select user_id from xe_user where email=? and password=? ";
+        List<String> userId = jdbcSupport.query(sql, String.class, email, psw);
+        return userId;
     }
 }

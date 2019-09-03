@@ -258,7 +258,7 @@ public class JdbcSupport {
 			long a = System.currentTimeMillis();
 			List<T> objs = null;
 			if (isBaseType(clazz)) {
-				objs = jdbcTemplate.queryForList(translateSql, clazz, args);
+				objs = jdbcTemplate.queryForList(sql, clazz, args);
 			} else {
 				BeanPropertyRowMapper<T> mapper = new BeanPropertyRowMapper<T>(clazz);
 				objs = jdbcTemplate.query(sql, mapper, args);
