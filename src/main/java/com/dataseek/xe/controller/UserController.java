@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.UUID;
 
@@ -120,5 +121,26 @@ public class UserController {
             responseDto.setError_message("signin error.");
             return  responseDto;
         }
+    }
+
+    @ApiOperation(value = "email verification")
+    @RequestMapping("/emailverification")
+    public ResponseDto emailverification(HttpServletRequest request) {
+        ResponseDto responseDto = new ResponseDto();
+        UserInfo userDto = new UserInfo();
+        userDto.setUserId(request.getParameter("userId"));
+
+        List<UserInfo> tmpList = userService.qryUser(userDto);
+        if (tmpList == null || tmpList.isEmpty()) {
+            responseDto.setStatus(XeConsts.RESPONSE_STATUS_FAILURE);
+            responseDto.setError_message("user does not exist.");
+            return  responseDto;
+        }
+        UserInfo userInfo = tmpList.get(0);
+        userInfo.setActive("Y");
+        userService.updUser(userInfo);
+
+        responseDto.setStatus(XeConsts.RESPONSE_STATUS_SUCCESS);
+        return  responseDto;
     }
 }
