@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @Api(value ="UserController")
 @RestController
@@ -54,7 +55,10 @@ public class UserController {
             }
 
             //email和password唯一性校验
-            List<String> tmpList = userService.qryUser(userDto.getEmail(), userDto.getPassword());
+            UserInfo qryDto = new UserInfo();
+            qryDto.setEmail(userDto.getEmail());
+            qryDto.setPassword(userDto.getPassword());
+            List<UserInfo> tmpList = userService.qryUser(qryDto);
             if (tmpList != null && !tmpList.isEmpty()) {
                 responseDto.setStatus(XeConsts.RESPONSE_STATUS_FAILURE);
                 responseDto.setError_message("email and password already exists.");
@@ -80,28 +84,41 @@ public class UserController {
     public ResponseDto signin(@RequestBody JSONObject json) {
         ResponseDto responseDto = new ResponseDto();
         try {
-            //MD5加密
+            //user是否存在校验
             String mdStr = DataUtil.EncoderByMd5(json.getString("password"));
+            UserInfo userDto = new UserInfo();
+            userDto.setEmail(json.getString("email"));
+            userDto.setPassword(mdStr);
 
-            List<String> tmpList = userService.qryUser(json.getString("email"), mdStr);
+            List<UserInfo> tmpList = userService.qryUser(userDto);
             if (tmpList == null || tmpList.isEmpty()) {
                 responseDto.setStatus(XeConsts.RESPONSE_STATUS_FAILURE);
                 responseDto.setError_message("user does not exist.");
                 return  responseDto;
             }
+            UserInfo userInfo = tmpList.get(0);
 
+            //激活校验
+            if ("N".equals(userInfo.getActive())) {
+                responseDto.setStatus(XeConsts.RESPONSE_STATUS_FAILURE);
+                responseDto.setError_message("user hasn't been activated.");
+                return  responseDto;
+            }
+            //构造sessionId
+            String sessionId = UUID.randomUUID().toString().replaceAll("_","");
+            //更新user的sessionid
+            userInfo.setSessionId(sessionId);
+            userService.updUser(userInfo);
+
+            responseDto.setUser_session_id(sessionId);
+            responseDto.setStatus(XeConsts.RESPONSE_STATUS_SUCCESS);
             return  responseDto;
         }
         catch (Exception ex) {
             logger.error(ex.toString(), ex);
             responseDto.setStatus(XeConsts.RESPONSE_STATUS_FAILURE);
-            responseDto.setError_message("signup error.");
+            responseDto.setError_message("signin error.");
             return  responseDto;
         }
-
-
-
-
-
     }
 }

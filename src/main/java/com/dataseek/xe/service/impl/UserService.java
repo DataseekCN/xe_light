@@ -17,7 +17,11 @@ public class UserService implements IUserService {
         userDao.insertUser(userInfo);
     }
 
-    public List<String> qryUser(String email, String psw) {
-        return userDao.qryUser(email, psw);
+    public List<UserInfo> qryUser(UserInfo userInfo) {
+        return userDao.qryUser(userInfo);
+    }
+
+    public void updUser(UserInfo userInfo) {
+        userDao.updUser(userInfo);
     }
 }

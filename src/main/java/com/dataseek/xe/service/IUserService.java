@@ -8,6 +8,8 @@ public interface IUserService {
 
     public void insertUser(UserInfo userInfo);
 
-    public List<String> qryUser(String email, String psw);
+    public List<UserInfo> qryUser(UserInfo userInfo);
+
+    public void updUser(UserInfo userInfo);
 
 }

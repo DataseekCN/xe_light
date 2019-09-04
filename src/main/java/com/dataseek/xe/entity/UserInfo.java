@@ -13,6 +13,36 @@ public class UserInfo {
 
     private String userId;
 
+    private String createDate;
+
+    private String updDate;
+
+    private String sessionId;
+
+    public String getUpdDate() {
+        return updDate;
+    }
+
+    public void setUpdDate(String updDate) {
+        this.updDate = updDate;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
     public String getUserId() {
         return userId;
     }
