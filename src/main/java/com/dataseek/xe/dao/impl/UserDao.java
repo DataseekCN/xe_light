@@ -44,6 +44,10 @@ public class UserDao implements IUserDao {
             sqlBd.append("and password=:password ");
             mapParam.addValue("password", userInfo.getPassword());
         }
+        if (!DataUtil.isEmpty(userInfo.getUserId())) {
+            sqlBd.append("and user_id=:user_id ");
+            mapParam.addValue("user_id", userInfo.getUserId());
+        }
 
         List<UserInfo> reList = jdbcSupport.query(sqlBd.toString(), UserInfo.class, mapParam);
         return reList;
