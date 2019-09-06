@@ -66,6 +66,12 @@ public class UserController {
                 return  responseDto;
             }
 
+            //发送激活邮件
+            String emailMsg = "Welcome to register as a member, " +
+                    "<a href='http://:12006/user/emailverification?userId=" +
+                    userDto.getUserId() + "'>click here to activate.</a>";
+            DataUtil.sendEmail(userDto.getEmail(), emailMsg);
+            //入库
             userService.insertUser(userDto);
 
             responseDto.setStatus(XeConsts.RESPONSE_STATUS_SUCCESS);
