@@ -1,4 +1,15 @@
 server:
+  port: 12443
+  tomcat:
+    max-threads: 800
+    accept-count: 30000
+    min-spare-threads: 20
+    max-connections: 30000
+  ssl:
+    key-store-type: JKS
+    key-store: tomcat.key
+    key-store-password: dataseek2019
+http:
   port: 12006
 xe:
   driver: com.mysql.jdbc.Driver
