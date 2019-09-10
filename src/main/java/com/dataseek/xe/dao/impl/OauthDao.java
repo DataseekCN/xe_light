@@ -30,6 +30,7 @@ import com.dataseek.xe.dao.IOauthDao;
 import com.dataseek.xe.entity.EtsyDeveloperDetail;
 import com.dataseek.xe.entity.EtsyTokenAdmin;
 import com.dataseek.xe.entity.OauthInfo;
+import com.dataseek.xe.entity.XeroDeveloperDetail;
 import com.dataseek.xe.mapper.JSONObjectMapper;
 import com.dataseek.xe.util.DateUtil;
 import com.dataseek.xe.util.XeConsts;
@@ -47,14 +48,14 @@ public class OauthDao implements IOauthDao {
     private final static Logger logger = LoggerFactory.getLogger(OauthDao.class);
     @Autowired
     private JdbcTemplate xeJdbcTemplate;
-    //查询相关开发配置信息
+    //查询Etsy相关开发配置信息
     public EtsyDeveloperDetail queryEtsyDeveloperDetail(){
         EtsyDeveloperDetail etsyDeveloperDetail = null;
         String query_sql = " select admin_id,developer_account,consumer_key,consumer_secret," +
                 " request_token_url,authorize_url,access_token_url,callback_url " +
                 " from xero.etsy_developer_detail " +
                 " where developer_account=? ";
-        Object[] params = new Object[]{XeConsts.APP_DEVELOPER_ACCOUNT};
+        Object[] params = new Object[]{XeConsts.APP_ETSY_DEVELOPER_ACCOUNT};
         List<JSONObject> detailJsons = xeJdbcTemplate.query(query_sql,params,new JSONObjectMapper());
         if(detailJsons!=null&&detailJsons.size()>0) {
             JSONObject detailJson = detailJsons.get(0);
@@ -110,8 +111,8 @@ public class OauthDao implements IOauthDao {
         }
     }
 
-    //根据APP帐号新增token记录,主要包含request token和request secret
-    public void insertReqTokenAndSecretWithAppAccount(String app_account,String request_token,String request_secret){
+    //根据APP帐号新增etsy token记录,主要包含request token和request secret
+    public void insertEtsyReqTokenAndSecretWithAppAccount(String app_account, String request_token, String request_secret){
         if(!StringUtils.isEmpty(app_account)
                 &&!StringUtils.isEmpty(request_token)
                 &&!StringUtils.isEmpty(request_secret)
@@ -127,8 +128,8 @@ public class OauthDao implements IOauthDao {
         }
     }
 
-    //根据request_token更新access_token和access_secret
-    public void updateAccessTokenAndSecretByRequestToken(OauthInfo paramOauthInfo){
+    //根据request_token更新etsy access_token和access_secret
+    public void updateEtsyAccessTokenAndSecretByRequestToken(OauthInfo paramOauthInfo){
         String request_token = paramOauthInfo.getRequest_token();
         String access_token = paramOauthInfo.getAccess_token();
         String access_secret = paramOauthInfo.getAccess_secret();
@@ -144,6 +145,22 @@ public class OauthDao implements IOauthDao {
             xeJdbcTemplate.update(update_sql, params);
             logger.info("token record has been updated!");
         }
+    }
+
+    //查询Xero相关开发配置信息
+    public XeroDeveloperDetail queryXeroDeveloperDetail(){
+        XeroDeveloperDetail xeroDeveloperDetail = null;
+        String query_sql = " select admin_id,developer_account,consumer_key,consumer_secret," +
+                " authorize_url,access_token_url,callback_url " +
+                " from xero.xero_developer_detail " +
+                " where developer_account=? ";
+        Object[] params = new Object[]{XeConsts.APP_XERO_DEVELOPER_ACCOUNT};
+        List<JSONObject> detailJsons = xeJdbcTemplate.query(query_sql,params,new JSONObjectMapper());
+        if(detailJsons!=null&&detailJsons.size()>0) {
+            JSONObject detailJson = detailJsons.get(0);
+            xeroDeveloperDetail = JSON.parseObject(detailJson.toJSONString(), XeroDeveloperDetail.class);
+        }
+        return xeroDeveloperDetail;
     }
 
 }

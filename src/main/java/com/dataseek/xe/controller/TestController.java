@@ -61,7 +61,7 @@ public class TestController {
     private JSONObject etsyTokenApply(@RequestParam String oauth_token,@RequestParam String oauth_verifier){
         OauthVo oauthVo = new OauthVo();
         JSONObject jsonObject = (JSONObject)JSON.toJSON(oauthVo);
-        OauthInfo oauthInfo = oauthService.applyAccessToken(oauth_token,oauth_verifier);
+        OauthInfo oauthInfo = oauthService.applyEtsyAccessToken(oauth_token,oauth_verifier);
         jsonObject.put("status","success");
         jsonObject.put("auth_status",XeConsts.AUTH_STATUS_AUTHORIZED);
         jsonObject.put("access_token",oauthInfo.getAccess_token());

@@ -1,9 +1,6 @@
 package com.dataseek.xe.dao;
 
-import com.dataseek.xe.entity.EtsyAccountBind;
-import com.dataseek.xe.entity.EtsyDeveloperDetail;
-import com.dataseek.xe.entity.EtsyTokenAdmin;
-import com.dataseek.xe.entity.OauthInfo;
+import com.dataseek.xe.entity.*;
 
 public interface IOauthDao {
     //根据app开发者帐号查询相关开发配置信息
@@ -19,8 +16,11 @@ public interface IOauthDao {
     public void deleteEtsyTokenAdminByAppAccount(String app_account);
 
     //根据APP帐号新增token记录,主要包含request token和request secret
-    public void insertReqTokenAndSecretWithAppAccount(String app_account,String request_token,String request_secret);
+    public void insertEtsyReqTokenAndSecretWithAppAccount(String app_account, String request_token, String request_secret);
 
     //根据request_token更新access_token和access_secret
-    public void updateAccessTokenAndSecretByRequestToken(OauthInfo paramOauthInfo);
+    public void updateEtsyAccessTokenAndSecretByRequestToken(OauthInfo paramOauthInfo);
+
+    //查询Xero相关开发配置信息
+    public XeroDeveloperDetail queryXeroDeveloperDetail();
 }

@@ -33,5 +33,5 @@ public interface IOauthService {
     public OauthInfo verifyEtsyAuthStatus(String app_account);
 
     //申请access token并返回授权链接等信息
-    public OauthInfo applyAccessToken(String oauth_token,String oauth_verifier);
+    public OauthInfo applyEtsyAccessToken(String oauth_token, String oauth_verifier);
 }
