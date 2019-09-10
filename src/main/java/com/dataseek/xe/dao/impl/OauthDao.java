@@ -138,9 +138,9 @@ public class OauthDao implements IOauthDao {
                 &&!StringUtils.isEmpty(access_secret)
         ) {
             String update_sql = " update xero.etsy_token_admin " +
-                    " set access_token=?,access_secret=?,update_time=? " +
+                    " set request_token=?,request_secret=?,access_token=?,access_secret=?,update_time=? " +
                     " where request_token=? ";
-            Object[] params = new Object[]{access_token,access_secret,update_time,request_token};
+            Object[] params = new Object[]{"","",access_token,access_secret,update_time,request_token};
             xeJdbcTemplate.update(update_sql, params);
             logger.info("token record has been updated!");
         }
