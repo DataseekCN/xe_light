@@ -2,7 +2,9 @@ package com.dataseek.xe.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.dataseek.xe.dao.IOauthDao;
 import com.dataseek.xe.entity.OauthInfo;
+import com.dataseek.xe.entity.XeroDeveloperDetail;
 import com.dataseek.xe.service.IOauthService;
 import com.dataseek.xe.util.XeConsts;
 import com.dataseek.xe.vo.OauthVo;
@@ -16,6 +18,9 @@ public class OauthController {
 
     @Autowired
     private IOauthService oauthService;
+
+    @Autowired
+    private IOauthDao oauthDao;
 
 	//验证用户etsy的token状态
     @RequestMapping(value="/etsy/token_verify",method = RequestMethod.GET)
@@ -57,21 +62,10 @@ public class OauthController {
     @RequestMapping(value="/xero/token_verify",method = RequestMethod.GET)
     public JSONObject xeroTokenVerify(@RequestParam String app_account){
         JSONObject jsonObject = new JSONObject();
-        //验证授权状态
-        OauthInfo oauthInfo = oauthService.verifyEtsyAuthStatus(app_account);
-        //如果等待用户授权
-        if(XeConsts.AUTH_STATUS_WAIT_AUTHORIZE.equals(oauthInfo.getAuth_status())){
-            jsonObject.put("status","success");
-            jsonObject.put("auth_status",XeConsts.AUTH_STATUS_WAIT_AUTHORIZE);
-            jsonObject.put("grant_url",oauthInfo.getGrant_url());
-        }
-        //如果已授权
-        else{
-            jsonObject.put("status","success");
-            jsonObject.put("auth_status",XeConsts.AUTH_STATUS_AUTHORIZED);
-            jsonObject.put("access_token",oauthInfo.getAccess_token());
-            jsonObject.put("access_secret",oauthInfo.getAccess_secret());
-        }
+        //查询App Xero开发者相关配置信息
+        XeroDeveloperDetail xeroDeveloperDetail = oauthDao.queryXeroDeveloperDetail();
+        //判定APP账户下是否已存在AccessToken
+
         return jsonObject;
     }
 }
