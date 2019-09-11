@@ -33,6 +33,10 @@ public class OauthInfo {
     private String consumer_key;
     //consumer_secret
     private String consumer_secret;
+    //code
+    private String code;
+    //state
+    private String state;
     //request_token
     private String request_token;
     //request_secret
@@ -43,8 +47,14 @@ public class OauthInfo {
     private String access_token;
     //access_secret
     private String access_secret;
+    //id_token
+    private String id_token;
+    //refresh_token
+    private String refresh_token;
     //授权状态流程
     private String auth_status;
+    //过期时间
+    private String expire_time;
     //更新时间
     private String update_time;
 
@@ -134,5 +144,45 @@ public class OauthInfo {
 
     public void setAuth_status(String auth_status) {
         this.auth_status = auth_status;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getId_token() {
+        return id_token;
+    }
+
+    public void setId_token(String id_token) {
+        this.id_token = id_token;
+    }
+
+    public String getRefresh_token() {
+        return refresh_token;
+    }
+
+    public void setRefresh_token(String refresh_token) {
+        this.refresh_token = refresh_token;
+    }
+
+    public String getExpire_time() {
+        return expire_time;
+    }
+
+    public void setExpire_time(String expire_time) {
+        this.expire_time = expire_time;
     }
 }

@@ -27,10 +27,7 @@ package com.dataseek.xe.dao.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dataseek.xe.dao.IOauthDao;
-import com.dataseek.xe.entity.EtsyDeveloperDetail;
-import com.dataseek.xe.entity.EtsyTokenAdmin;
-import com.dataseek.xe.entity.OauthInfo;
-import com.dataseek.xe.entity.XeroDeveloperDetail;
+import com.dataseek.xe.entity.*;
 import com.dataseek.xe.mapper.JSONObjectMapper;
 import com.dataseek.xe.util.DateUtil;
 import com.dataseek.xe.util.XeConsts;
@@ -161,6 +158,24 @@ public class OauthDao implements IOauthDao {
             xeroDeveloperDetail = JSON.parseObject(detailJson.toJSONString(), XeroDeveloperDetail.class);
         }
         return xeroDeveloperDetail;
+    }
+
+    //根据APP账户查询xero用户token管理信息
+    public XeroTokenAdmin queryXeroTokenAdminByAppAccount(String app_account){
+        XeroTokenAdmin xeroTokenAdmin = null;
+        if(!StringUtils.isEmpty(app_account)) {
+            String query_sql = " select admin_id,app_account,code,state, " +
+                    " access_token,id_token,refresh_token,expire_time,update_time " +
+                    " from xero.xero_token_admin " +
+                    " where app_account=? ";
+            Object[] params = new Object[]{app_account};
+            List<JSONObject> detailJsons = xeJdbcTemplate.query(query_sql, params, new JSONObjectMapper());
+            if (detailJsons != null && detailJsons.size() > 0) {
+                JSONObject detailJson = detailJsons.get(0);
+                xeroTokenAdmin = JSON.parseObject(detailJson.toJSONString(), XeroTokenAdmin.class);
+            }
+        }
+        return xeroTokenAdmin;
     }
 
 }

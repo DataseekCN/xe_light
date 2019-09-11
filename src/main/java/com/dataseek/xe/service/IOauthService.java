@@ -25,6 +25,7 @@
 package com.dataseek.xe.service;
 
 import com.dataseek.xe.entity.OauthInfo;
+import com.dataseek.xe.entity.XeroDeveloperDetail;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,4 +35,6 @@ public interface IOauthService {
 
     //申请access token并返回授权链接等信息
     public OauthInfo applyEtsyAccessToken(String oauth_token, String oauth_verifier);
+
+    public boolean checkXeroTokenExist(String app_account);
 }

@@ -26,10 +26,7 @@ package com.dataseek.xe.service.impl;
 
 import com.dataseek.xe.config.XeAutoConfig;
 import com.dataseek.xe.dao.IOauthDao;
-import com.dataseek.xe.entity.EtsyDeveloperDetail;
-import com.dataseek.xe.entity.EtsyTokenAdmin;
-import com.dataseek.xe.entity.OauthInfo;
-import com.dataseek.xe.entity.XeroDeveloperDetail;
+import com.dataseek.xe.entity.*;
 import com.dataseek.xe.extend.apis.EtsyVisitApi;
 import com.dataseek.xe.service.IOauthService;
 import com.dataseek.xe.util.XeConsts;
@@ -125,5 +122,23 @@ public class OauthService implements IOauthService {
 
         return oauthInfo;
     }
+
+    //验证APP账户下是否存在access token
+    @Override
+    public boolean checkXeroTokenExist(String app_account) {
+        boolean isExist =false;
+        XeroTokenAdmin xeroTokenAdmin = oauthDao.queryXeroTokenAdminByAppAccount(app_account);
+        if(xeroTokenAdmin!=null){
+            String access_token = xeroTokenAdmin.getAccess_token();
+            String refresh_token = xeroTokenAdmin.getRefresh_token();
+            if(!StringUtils.isEmpty(access_token)
+                &&!StringUtils.isEmpty(refresh_token)){
+                isExist=true;
+            }
+        }
+        return isExist;
+    }
+
+    //申请xero的授权链接
 
 }

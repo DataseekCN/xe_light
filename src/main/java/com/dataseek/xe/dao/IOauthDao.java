@@ -23,4 +23,7 @@ public interface IOauthDao {
 
     //查询Xero相关开发配置信息
     public XeroDeveloperDetail queryXeroDeveloperDetail();
+
+    //根据APP账户查询xero用户token管理信息
+    public XeroTokenAdmin queryXeroTokenAdminByAppAccount(String app_account);
 }
