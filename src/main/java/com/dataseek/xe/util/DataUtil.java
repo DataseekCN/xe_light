@@ -1,5 +1,9 @@
 package com.dataseek.xe.util;
 
+import com.dataseek.xe.controller.UserController;
+import jdk.internal.dynalink.beans.StaticClass;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sun.misc.BASE64Encoder;
 
 import javax.mail.*;
@@ -17,6 +21,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DataUtil {
+    protected static Logger logger = LoggerFactory.getLogger(DataUtil.class);
+
     private static final AtomicInteger atomicInteger = new AtomicInteger(1000);
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
@@ -121,6 +127,34 @@ public class DataUtil {
 
         // 最后当然就是发送邮件啦
         Transport.send(message);
+
+    }
+
+    /**
+     * 将date转化为string
+     * @param dateVal
+     * @return
+     */
+    public static String transDateToStr(long dateVal) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(dateVal);
+    }
+
+    /**
+     * 将date转化为long
+     * @param dateStr)
+     * @return
+     */
+    public static long transDateToValue(String dateStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            return sdf.parse(dateStr).getTime();
+        }
+        catch (Exception ex) {
+            logger.error(ex.toString(), ex);
+            return 0;
+        }
+
 
     }
 
