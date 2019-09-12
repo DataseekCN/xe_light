@@ -5,6 +5,16 @@ public class ResponseDto extends BaseVo {
 
     private String user_session_id;
 
+    private boolean verified;
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
     public String getUser_session_id() {
         return user_session_id;
     }
