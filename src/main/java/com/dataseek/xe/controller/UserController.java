@@ -171,7 +171,6 @@ public class UserController {
     @RequestMapping("/verifyshopname")
     public ResponseDto verifyshopname(@RequestBody JSONObject json) {
         ResponseDto responseDto = new ResponseDto();
-        String shopName = "DataseekDevs";
         String url = urlHead + "/shops/" + json.getString("shopname");
         try {
             //添加get方式的参数
