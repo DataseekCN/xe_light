@@ -28,12 +28,18 @@ import com.dataseek.xe.config.XeAutoConfig;
 import com.dataseek.xe.dao.IOauthDao;
 import com.dataseek.xe.entity.*;
 import com.dataseek.xe.extend.apis.EtsyVisitApi;
+import com.dataseek.xe.extend.apis.XeroVisitApi;
 import com.dataseek.xe.service.IOauthService;
 import com.dataseek.xe.util.XeConsts;
+import com.github.scribejava.core.oauth.OAuth20Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class OauthService implements IOauthService {
@@ -140,5 +146,22 @@ public class OauthService implements IOauthService {
     }
 
     //申请xero的授权链接
+    @Override
+    @Transactional(value= XeAutoConfig.DEFAULT_TX, rollbackFor=Exception.class)
+    public String requestXeroAuthUrl(String app_account,XeroDeveloperDetail xeroDeveloperDetail){
+        String auth_url=null;
+        OAuth20Service service = XeroVisitApi.createXeroService(xeroDeveloperDetail);
+        final String secretState = UUID.randomUUID().toString().replaceAll("-","");
+        final Map<String, String> additionalParams = new HashMap<>();
+        additionalParams.put("access_type", "offline");
+        auth_url = service.createAuthorizationUrlBuilder()
+                .state(secretState)
+                .additionalParams(additionalParams)
+                .build();
+        //保存相关state状态
+
+        return auth_url;
+    }
+
 
 }

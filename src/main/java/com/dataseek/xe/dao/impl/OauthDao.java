@@ -178,4 +178,20 @@ public class OauthDao implements IOauthDao {
         return xeroTokenAdmin;
     }
 
+    //根据app帐号删除xero token管理记录
+    public void deleteXeroTokenAdminByAppAccount(String app_account){
+        if(!StringUtils.isEmpty(app_account)) {
+            String delete_sql = " delete from xero.xero_token_admin " +
+                    " where app_account=?  ";
+            Object[] params = new Object[]{app_account};
+            xeJdbcTemplate.update(delete_sql, params);
+            logger.info("token record has been deleted!");
+        }
+    }
+
+    //新增xero token管理记录
+    public void insertXeroTokenAdmin(XeroTokenAdmin xeroTokenAdmin){
+        
+    }
+
 }

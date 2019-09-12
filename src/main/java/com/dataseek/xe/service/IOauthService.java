@@ -24,6 +24,7 @@
  */
 package com.dataseek.xe.service;
 
+import com.dataseek.xe.config.XeAutoConfig;
 import com.dataseek.xe.entity.OauthInfo;
 import com.dataseek.xe.entity.XeroDeveloperDetail;
 import org.springframework.transaction.annotation.Propagation;
@@ -37,4 +38,8 @@ public interface IOauthService {
     public OauthInfo applyEtsyAccessToken(String oauth_token, String oauth_verifier);
 
     public boolean checkXeroTokenExist(String app_account);
+
+    //申请xero的授权链接
+    @Transactional(value= XeAutoConfig.DEFAULT_TX, rollbackFor=Exception.class)
+    String requestXeroAuthUrl(String app_account, XeroDeveloperDetail xeroDeveloperDetail);
 }

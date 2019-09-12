@@ -69,7 +69,7 @@ public class OauthController {
         //不存在token(否)
         if(!tokenIsExist){
             //申请授权链接
-
+            String auth_url = oauthService.requestXeroAuthUrl(app_account,xeroDeveloperDetail);
         }
         //存在token(是)
         else{
