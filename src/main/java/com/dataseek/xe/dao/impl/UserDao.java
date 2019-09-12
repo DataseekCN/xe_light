@@ -34,7 +34,7 @@ public class UserDao implements IUserDao {
     public List<UserInfo> qryUser(UserInfo userInfo) {
         MapSqlParameterSource mapParam = new MapSqlParameterSource();
         StringBuilder sqlBd = new StringBuilder();
-        sqlBd.append("select first_name,last_name,email,password,active,user_id,create_date,upd_date,session_id from xe_user where 1=1 ");
+        sqlBd.append("select first_name,last_name,email,password,active,user_id,create_date,upd_date,session_id,exp_date from xe_user where 1=1 ");
 
         if (!DataUtil.isEmpty(userInfo.getEmail())) {
             sqlBd.append("and email=:email ");
@@ -48,6 +48,10 @@ public class UserDao implements IUserDao {
             sqlBd.append("and user_id=:user_id ");
             mapParam.addValue("user_id", userInfo.getUserId());
         }
+        if (!DataUtil.isEmpty(userInfo.getSessionId())) {
+            sqlBd.append("and session_id=:session_id ");
+            mapParam.addValue("session_id", userInfo.getSessionId());
+        }
 
         List<UserInfo> reList = jdbcSupport.query(sqlBd.toString(), UserInfo.class, mapParam);
         return reList;
@@ -57,7 +61,7 @@ public class UserDao implements IUserDao {
         StringBuilder sqlBd = new StringBuilder();
         sqlBd.append("update xe_user set ");
         sqlBd.append("first_name=:first_name,last_name=:last_name,email=:email,password=:password,active=:active, ");
-        sqlBd.append("user_id=:user_id,create_date=:create_date,upd_date=sysdate(),session_id=:session_id ");
+        sqlBd.append("user_id=:user_id,create_date=:create_date,upd_date=sysdate(),session_id=:session_id,exp_date=:exp_date ");
         sqlBd.append("where user_id=:user_id  ");
 
         MapSqlParameterSource mapParam = new MapSqlParameterSource();
@@ -69,6 +73,7 @@ public class UserDao implements IUserDao {
         mapParam.addValue("user_id", userInfo.getUserId());
         mapParam.addValue("create_date", userInfo.getCreateDate());
         mapParam.addValue("session_id", userInfo.getSessionId());
+        mapParam.addValue("exp_date", userInfo.getExpDate());
         jdbcSupport.update(sqlBd.toString(), mapParam);
     }
 

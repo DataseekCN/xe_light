@@ -19,6 +19,16 @@ public class UserInfo {
 
     private String sessionId;
 
+    private String expDate;
+
+    public String getExpDate() {
+        return expDate;
+    }
+
+    public void setExpDate(String expDate) {
+        this.expDate = expDate;
+    }
+
     public String getUpdDate() {
         return updDate;
     }

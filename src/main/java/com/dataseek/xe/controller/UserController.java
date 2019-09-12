@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -115,6 +116,8 @@ public class UserController {
             String sessionId = UUID.randomUUID().toString().replaceAll("_","");
             //更新user的sessionid
             userInfo.setSessionId(sessionId);
+            //设置session的timeout
+            userInfo.setExpDate(DataUtil.transDateToStr(new Date().getTime()+24*60*60*1000));
             userService.updUser(userInfo);
 
             responseDto.setUser_session_id(sessionId);
