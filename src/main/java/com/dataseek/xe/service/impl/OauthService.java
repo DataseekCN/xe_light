@@ -159,7 +159,10 @@ public class OauthService implements IOauthService {
                 .additionalParams(additionalParams)
                 .build();
         //保存相关state状态
-
+        XeroTokenAdmin xeroTokenAdmin = new XeroTokenAdmin();
+        xeroTokenAdmin.setApp_account(app_account);
+        xeroTokenAdmin.setState(secretState);
+        oauthDao.insertXeroTokenAdmin(xeroTokenAdmin);
         return auth_url;
     }
 

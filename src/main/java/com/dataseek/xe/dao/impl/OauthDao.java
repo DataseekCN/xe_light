@@ -179,6 +179,7 @@ public class OauthDao implements IOauthDao {
     }
 
     //根据app帐号删除xero token管理记录
+    @Override
     public void deleteXeroTokenAdminByAppAccount(String app_account){
         if(!StringUtils.isEmpty(app_account)) {
             String delete_sql = " delete from xero.xero_token_admin " +
@@ -190,8 +191,22 @@ public class OauthDao implements IOauthDao {
     }
 
     //新增xero token管理记录
+    @Override
     public void insertXeroTokenAdmin(XeroTokenAdmin xeroTokenAdmin){
-        
+        String insert_sql = " insert into xero.xero_token_admin" +
+                " (app_account,code,state,access_token,id_token,refresh_token,expire_time,update_time) " +
+                " values(?,?,?,?,?,?,?,?) ";
+        String app_account = xeroTokenAdmin.getApp_account();
+        String code = xeroTokenAdmin.getCode();
+        String state = xeroTokenAdmin.getState();
+        String access_token = xeroTokenAdmin.getAccess_token();
+        String id_token = xeroTokenAdmin.getId_token();
+        String refresh_token = xeroTokenAdmin.getRefresh_token();
+        String expire_time = xeroTokenAdmin.getExpire_time();
+        String update_time = xeroTokenAdmin.getUpdate_time();
+        Object[] params = new Object[]{app_account,code,state,access_token,id_token,refresh_token,expire_time,update_time};
+        xeJdbcTemplate.update(insert_sql, params);
+        logger.info("xero state record has been inserted!");
     }
 
 }

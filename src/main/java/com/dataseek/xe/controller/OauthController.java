@@ -5,6 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.dataseek.xe.dao.IOauthDao;
 import com.dataseek.xe.entity.OauthInfo;
 import com.dataseek.xe.entity.XeroDeveloperDetail;
+import com.dataseek.xe.entity.XeroTokenAdmin;
+import com.dataseek.xe.extend.apis.XeroVisitApi;
 import com.dataseek.xe.service.IOauthService;
 import com.dataseek.xe.util.XeConsts;
 import com.dataseek.xe.vo.OauthVo;
@@ -70,13 +72,28 @@ public class OauthController {
         if(!tokenIsExist){
             //申请授权链接
             String auth_url = oauthService.requestXeroAuthUrl(app_account,xeroDeveloperDetail);
+            jsonObject.put("status","success");
+            jsonObject.put("auth_status",XeConsts.AUTH_STATUS_WAIT_AUTHORIZE);
+            jsonObject.put("grant_url",auth_url);
         }
         //存在token(是)
         else{
             //判断access token是否过期
+            //判断access token是否过期--根据APP账户名查询access token
+            XeroTokenAdmin xeroTokenAdmin = oauthDao.queryXeroTokenAdminByAppAccount(app_account);
+            String access_token = xeroTokenAdmin.getAccess_token();
+            String refresh_token = xeroTokenAdmin.getRefresh_token();
+            boolean token_status = XeroVisitApi.verifyXeroTokenExpireStatus(access_token,xeroDeveloperDetail);
+            //access token已过期
+            if(!token_status) {
+                //刷新access token
+                access_token = XeroVisitApi.refreshXeroToken(refresh_token,xeroDeveloperDetail);
+            }
+            //更新最新access_token至数据库表
 
-            //刷新access token
-
+            jsonObject.put("status","success");
+            jsonObject.put("auth_status",XeConsts.AUTH_STATUS_AUTHORIZED);
+            jsonObject.put("access_token",access_token);
         }
 
         return jsonObject;
