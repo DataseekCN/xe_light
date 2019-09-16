@@ -24,6 +24,7 @@ xe:
   timeBetweenEvictionRunsMillis: 3000
   minEvictableIdleTimeMillis: 300000
   maxPoolPreparedStatementPerConnectionSize: 20
+  interTrigger: false
 spring:
     datasource:
         username: root

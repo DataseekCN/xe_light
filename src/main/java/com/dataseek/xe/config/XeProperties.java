@@ -44,6 +44,15 @@ public class XeProperties {
     private Integer timeBetweenEvictionRunsMillis;
     private Integer minEvictableIdleTimeMillis;
     private Integer maxPoolPreparedStatementPerConnectionSize;
+    private boolean interTrigger;
+
+    public boolean isInterTrigger() {
+        return interTrigger;
+    }
+
+    public void setInterTrigger(boolean interTrigger) {
+        this.interTrigger = interTrigger;
+    }
 
     public String getDriver() {
         return driver;
