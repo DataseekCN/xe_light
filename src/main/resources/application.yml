@@ -13,9 +13,9 @@ http:
   port: 12006
 xe:
   driver: com.mysql.jdbc.Driver
-  jdbc_url: jdbc:mysql://127.0.0.1:3606/xero?useUnicode=true&characterEncoding=utf8&useSSL=false
-  db_username: test
-  db_password: test
+  jdbc_url: jdbc:mysql://47.101.53.114:3606/xero?useUnicode=true&characterEncoding=utf8&useSSL=false
+  db_username: root
+  db_password: DataSeek@2019
   initialSize: 20
   maxActive: 30
   maxIdle: 10
@@ -29,7 +29,7 @@ spring:
     datasource:
         username: test
         password: test
-        jdbc-url: jdbc:mysql://127.0.0.1:3606/xero?useUnicode=true&characterEncoding=utf8&useSSL=false
+        jdbc-url: jdbc:mysql://47.101.53.114:3606/xero?useUnicode=true&characterEncoding=utf8&useSSL=false
         driver-class-name: com.mysql.jdbc.Driver
     profiles:
         active: dev

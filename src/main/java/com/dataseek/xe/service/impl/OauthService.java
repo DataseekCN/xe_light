@@ -166,5 +166,9 @@ public class OauthService implements IOauthService {
         return auth_url;
     }
 
-
+    @Override
+    @Transactional(value= XeAutoConfig.DEFAULT_TX, rollbackFor=Exception.class)
+    public void updateXeroAccessToken(XeroTokenAdmin xeroTokenAdmin) {
+        oauthDao.insertXeroTokenAdmin(xeroTokenAdmin);
+    }
 }

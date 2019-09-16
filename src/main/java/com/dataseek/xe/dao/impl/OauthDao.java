@@ -29,7 +29,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dataseek.xe.dao.IOauthDao;
 import com.dataseek.xe.entity.*;
 import com.dataseek.xe.mapper.JSONObjectMapper;
-import com.dataseek.xe.util.DateUtil;
+import com.dataseek.xe.util.DateUtils;
 import com.dataseek.xe.util.XeConsts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,7 +116,7 @@ public class OauthDao implements IOauthDao {
         ) {
             String access_token = "";
             String access_secret = "";
-            String update_time = DateUtil.getNowTime_EN();
+            String update_time = DateUtils.getDateTimeNowStr();
             String insert_sql = " insert into xero.etsy_token_admin(app_account,request_token,request_secret,access_token,access_secret,update_time) " +
                     " values(?,?,?,?,?,?) ";
             Object[] params = new Object[]{app_account, request_token, request_secret, access_token, access_secret, update_time};
@@ -130,7 +130,7 @@ public class OauthDao implements IOauthDao {
         String request_token = paramOauthInfo.getRequest_token();
         String access_token = paramOauthInfo.getAccess_token();
         String access_secret = paramOauthInfo.getAccess_secret();
-        String update_time = DateUtil.getNowTime_EN();
+        String update_time = DateUtils.getDateTimeNowStr();
         if(!StringUtils.isEmpty(request_token)
                 &&!StringUtils.isEmpty(access_token)
                 &&!StringUtils.isEmpty(access_secret)

@@ -27,6 +27,7 @@ package com.dataseek.xe.extend.apis;
 import com.dataseek.xe.dao.impl.OauthDao;
 import com.dataseek.xe.entity.XeroDeveloperDetail;
 import com.github.scribejava.core.builder.ServiceBuilder;
+import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
@@ -79,12 +80,12 @@ public class XeroVisitApi {
     }
 
     //根据refresh token刷新access token
-    public static String refreshXeroToken(String refresh_token,XeroDeveloperDetail xeroDeveloperDetail){
-        String access_token = null;
+    public static OAuth2AccessToken refreshXeroToken(String refresh_token, XeroDeveloperDetail xeroDeveloperDetail){
+        OAuth2AccessToken access_token = null;
         OAuth20Service service = XeroVisitApi.createXeroService(xeroDeveloperDetail);
         if(service!=null){
             try {
-                access_token = service.refreshAccessToken(refresh_token).getAccessToken();
+                access_token = service.refreshAccessToken(refresh_token);
             } catch (IOException e) {
                 logger.error(e.getMessage());
             } catch (InterruptedException e) {

@@ -8,10 +8,14 @@ import com.dataseek.xe.entity.XeroDeveloperDetail;
 import com.dataseek.xe.entity.XeroTokenAdmin;
 import com.dataseek.xe.extend.apis.XeroVisitApi;
 import com.dataseek.xe.service.IOauthService;
+import com.dataseek.xe.util.DateUtils;
 import com.dataseek.xe.util.XeConsts;
 import com.dataseek.xe.vo.OauthVo;
+import com.github.scribejava.core.model.OAuth2AccessToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 @CrossOrigin
@@ -87,10 +91,16 @@ public class OauthController {
             //access token已过期
             if(!token_status) {
                 //刷新access token
-                access_token = XeroVisitApi.refreshXeroToken(refresh_token,xeroDeveloperDetail);
+                OAuth2AccessToken accessToken = XeroVisitApi.refreshXeroToken(refresh_token,xeroDeveloperDetail);
+                xeroTokenAdmin.setAccess_token(access_token);
+                Integer expiresIn = accessToken.getExpiresIn();
+                Long currentMills = System.currentTimeMillis();
+                Long expireMills = currentMills+expiresIn;
+                String expire_time = DateUtils.formatDateTimeStrFromMills(expireMills);
+                String update_time = DateUtils.getDateTimeNowStr();
+                //更新最新access_token至数据库表
+                oauthService.updateXeroAccessToken(xeroTokenAdmin);
             }
-            //更新最新access_token至数据库表
-
             jsonObject.put("status","success");
             jsonObject.put("auth_status",XeConsts.AUTH_STATUS_AUTHORIZED);
             jsonObject.put("access_token",access_token);

@@ -28,27 +28,27 @@ public class XeroTokenAdmin {
     //记录id
     private Integer admin_id;
     //APP账户名
-    private String app_account="";
+    private String app_account;
     //request_token
-    private String request_token="";
+    private String request_token;
     //request_secret
-    private String request_secret="";
+    private String request_secret;
     //code
-    private String code="";
+    private String code;
     //state
-    private String state="";
+    private String state;
     //id_token
-    private String id_token="";
+    private String id_token;
     //refresh_token
-    private String refresh_token="";
+    private String refresh_token;
     //access_token
-    private String access_token="";
+    private String access_token;
     //access_secret
-    private String access_secret="";
+    private String access_secret;
     //过期时间
-    private String expire_time="";
+    private String expire_time;
     //更新时间
-    private String update_time="";
+    private String update_time;
 
     public Integer getAdmin_id() {
         return admin_id;
