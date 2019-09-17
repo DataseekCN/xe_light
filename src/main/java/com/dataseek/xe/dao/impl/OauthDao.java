@@ -178,6 +178,25 @@ public class OauthDao implements IOauthDao {
         return xeroTokenAdmin;
     }
 
+    //根据state查询xero用户token管理信息
+    @Override
+    public XeroTokenAdmin queryXeroTokenAdminByState(String state){
+        XeroTokenAdmin xeroTokenAdmin = null;
+        if(!StringUtils.isEmpty(state)) {
+            String query_sql = " select admin_id,app_account,code,state, " +
+                    " access_token,id_token,refresh_token,expire_time,update_time " +
+                    " from xero.xero_token_admin " +
+                    " where state=? ";
+            Object[] params = new Object[]{state};
+            List<JSONObject> detailJsons = xeJdbcTemplate.query(query_sql, params, new JSONObjectMapper());
+            if (detailJsons != null && detailJsons.size() > 0) {
+                JSONObject detailJson = detailJsons.get(0);
+                xeroTokenAdmin = JSON.parseObject(detailJson.toJSONString(), XeroTokenAdmin.class);
+            }
+        }
+        return xeroTokenAdmin;
+    }
+
     //根据app帐号删除xero token管理记录
     @Override
     public void deleteXeroTokenAdminByAppAccount(String app_account){

@@ -1,6 +1,8 @@
 package com.dataseek.xe.vo;
 
-public class OauthVo {
+import com.alibaba.fastjson.JSONObject;
+
+public class OauthVo{
     //授权地址
     private String grant_url;
     //授权状态流程
@@ -9,9 +11,21 @@ public class OauthVo {
     private String access_token;
     //access_secret
     private String access_secret;
+    //status
+    private String status;
+
+    private String error_msg;
 
     public String getGrant_url() {
         return grant_url;
+    }
+
+    public String getError_msg() {
+        return error_msg;
+    }
+
+    public void setError_msg(String error_msg) {
+        this.error_msg = error_msg;
     }
 
     public void setGrant_url(String grant_url) {
@@ -40,5 +54,13 @@ public class OauthVo {
 
     public void setAccess_secret(String access_secret) {
         this.access_secret = access_secret;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

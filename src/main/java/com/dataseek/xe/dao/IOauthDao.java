@@ -27,6 +27,9 @@ public interface IOauthDao {
     //根据APP账户查询xero用户token管理信息
     public XeroTokenAdmin queryXeroTokenAdminByAppAccount(String app_account);
 
+    //根据state查询xero用户token管理信息
+    XeroTokenAdmin queryXeroTokenAdminByState(String state);
+
     //根据app帐号删除xero token管理记录
     void deleteXeroTokenAdminByAppAccount(String app_account);
 

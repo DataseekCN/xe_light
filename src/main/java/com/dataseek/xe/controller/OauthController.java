@@ -12,6 +12,8 @@ import com.dataseek.xe.util.DateUtils;
 import com.dataseek.xe.util.XeConsts;
 import com.dataseek.xe.vo.OauthVo;
 import com.github.scribejava.core.model.OAuth2AccessToken;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +23,7 @@ import java.util.Date;
 @CrossOrigin
 @RequestMapping("/connections")
 public class OauthController {
+    private final static Logger logger = LoggerFactory.getLogger(OauthController.class);
 
     @Autowired
     private IOauthService oauthService;
@@ -66,8 +69,8 @@ public class OauthController {
 
     //验证用户xero的token状态
     @RequestMapping(value="/xero/token_verify",method = RequestMethod.GET)
-    public JSONObject xeroTokenVerify(@RequestParam String app_account){
-        JSONObject jsonObject = new JSONObject();
+    public OauthVo xeroTokenVerify(@RequestParam String app_account){
+        OauthVo oauthVo = new OauthVo();
         //查询Xero开发者配置信息
         XeroDeveloperDetail xeroDeveloperDetail = oauthDao.queryXeroDeveloperDetail();
         //判断APP账户下是否存在access token
@@ -76,9 +79,9 @@ public class OauthController {
         if(!tokenIsExist){
             //申请授权链接
             String auth_url = oauthService.requestXeroAuthUrl(app_account,xeroDeveloperDetail);
-            jsonObject.put("status","success");
-            jsonObject.put("auth_status",XeConsts.AUTH_STATUS_WAIT_AUTHORIZE);
-            jsonObject.put("grant_url",auth_url);
+            oauthVo.setStatus("success");
+            oauthVo.setAuth_status(XeConsts.AUTH_STATUS_WAIT_AUTHORIZE);
+            oauthVo.setGrant_url(auth_url);
         }
         //存在token(是)
         else{
@@ -87,25 +90,78 @@ public class OauthController {
             XeroTokenAdmin xeroTokenAdmin = oauthDao.queryXeroTokenAdminByAppAccount(app_account);
             String access_token = xeroTokenAdmin.getAccess_token();
             String refresh_token = xeroTokenAdmin.getRefresh_token();
-            boolean token_status = XeroVisitApi.verifyXeroTokenExpireStatus(access_token,xeroDeveloperDetail);
+            boolean token_status = false;
+            try{
+                token_status = XeroVisitApi.verifyXeroTokenExpireStatus(access_token,xeroDeveloperDetail);
+            }
+            catch (Exception e){
+                oauthVo.setStatus("failure");
+                oauthVo.setError_msg(e.getMessage());
+                return oauthVo;
+            }
             //access token已过期
             if(!token_status) {
                 //刷新access token
-                OAuth2AccessToken accessToken = XeroVisitApi.refreshXeroToken(refresh_token,xeroDeveloperDetail);
-                xeroTokenAdmin.setAccess_token(access_token);
-                Integer expiresIn = accessToken.getExpiresIn();
-                Long currentMills = System.currentTimeMillis();
-                Long expireMills = currentMills+expiresIn;
-                String expire_time = DateUtils.formatDateTimeStrFromMills(expireMills);
-                String update_time = DateUtils.getDateTimeNowStr();
-                //更新最新access_token至数据库表
-                oauthService.updateXeroAccessToken(xeroTokenAdmin);
-            }
-            jsonObject.put("status","success");
-            jsonObject.put("auth_status",XeConsts.AUTH_STATUS_AUTHORIZED);
-            jsonObject.put("access_token",access_token);
-        }
+                OAuth2AccessToken accessToken = null;
+                try {
+                    accessToken = XeroVisitApi.refreshXeroToken(refresh_token, xeroDeveloperDetail);
+                    Integer expiresIn = accessToken.getExpiresIn();
+                    Long currentMills = System.currentTimeMillis();
+                    Long expireMills = currentMills+expiresIn;
+                    String expire_time = DateUtils.formatDateTimeStrFromMills(expireMills);
+                    String update_time = DateUtils.getDateTimeNowStr();
+                    xeroTokenAdmin.setAccess_token(access_token);
+                    xeroTokenAdmin.setExpire_time(expire_time);
+                    xeroTokenAdmin.setUpdate_time(update_time);
+                    //更新最新access_token至数据库表
+                    oauthService.updateXeroAccessToken(xeroTokenAdmin);
+                }
+                catch (Exception e){
+                    oauthVo.setStatus("failure");
+                    oauthVo.setError_msg(e.getMessage());
+                    return oauthVo;
+                }
 
-        return jsonObject;
+            }
+            oauthVo.setStatus("success");
+            oauthVo.setAuth_status(XeConsts.AUTH_STATUS_AUTHORIZED);
+            //oauthVo.setAccess_token(access_token);
+        }
+        return oauthVo;
+    }
+
+    //申请xero的access token
+    @RequestMapping(value="/xero/token_apply",method = RequestMethod.GET)
+    public OauthVo xeroTokenApply(@RequestParam String code,@RequestParam String state){
+        OauthVo oauthVo = new OauthVo();
+        //查询Xero开发者配置信息
+        XeroDeveloperDetail xeroDeveloperDetail = oauthDao.queryXeroDeveloperDetail();
+        //根据state查询账户token绑定信息记录
+        XeroTokenAdmin xeroTokenAdmin = oauthDao.queryXeroTokenAdminByState(state);
+        //申请access token
+        OAuth2AccessToken accessToken = null;
+        try {
+            accessToken = XeroVisitApi.applyXeroToken(code,xeroDeveloperDetail);
+            String access_token = accessToken.getAccessToken();
+            Integer expiresIn = accessToken.getExpiresIn()*1000;
+            String refresh_token = accessToken.getRefreshToken();
+            Long currentMills = System.currentTimeMillis();
+            Long expireMills = currentMills+expiresIn;
+            String expire_time = DateUtils.formatDateTimeStrFromMills(expireMills);
+            String update_time = DateUtils.getDateTimeNowStr();
+            xeroTokenAdmin.setAccess_token(access_token);
+            xeroTokenAdmin.setRefresh_token(refresh_token);
+            xeroTokenAdmin.setExpire_time(expire_time);
+            xeroTokenAdmin.setUpdate_time(update_time);
+            xeroTokenAdmin.setState(null);
+            //保存access token和相关信息
+            oauthService.updateXeroAccessToken(xeroTokenAdmin);
+            oauthVo.setStatus("success");
+            oauthVo.setAuth_status(XeConsts.AUTH_STATUS_AUTHORIZED);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            oauthVo.setStatus("fail");
+        }
+        return oauthVo;
     }
 }

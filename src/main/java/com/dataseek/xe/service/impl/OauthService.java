@@ -26,12 +26,15 @@ package com.dataseek.xe.service.impl;
 
 import com.dataseek.xe.config.XeAutoConfig;
 import com.dataseek.xe.dao.IOauthDao;
+import com.dataseek.xe.dao.impl.OauthDao;
 import com.dataseek.xe.entity.*;
 import com.dataseek.xe.extend.apis.EtsyVisitApi;
 import com.dataseek.xe.extend.apis.XeroVisitApi;
 import com.dataseek.xe.service.IOauthService;
 import com.dataseek.xe.util.XeConsts;
 import com.github.scribejava.core.oauth.OAuth20Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +46,8 @@ import java.util.UUID;
 
 @Service
 public class OauthService implements IOauthService {
+    private final static Logger logger = LoggerFactory.getLogger(OauthService.class);
+
     @Autowired
     private IOauthDao oauthDao;
 
@@ -154,21 +159,27 @@ public class OauthService implements IOauthService {
         final String secretState = UUID.randomUUID().toString().replaceAll("-","");
         final Map<String, String> additionalParams = new HashMap<>();
         additionalParams.put("access_type", "offline");
+        logger.info("requestXeroAuthUrl started");
         auth_url = service.createAuthorizationUrlBuilder()
                 .state(secretState)
                 .additionalParams(additionalParams)
                 .build();
+        logger.info("requestXeroAuthUrl finished");
         //保存相关state状态
         XeroTokenAdmin xeroTokenAdmin = new XeroTokenAdmin();
         xeroTokenAdmin.setApp_account(app_account);
         xeroTokenAdmin.setState(secretState);
+        logger.info("deleteXeroTokenAdminByAppAccount started");
+        oauthDao.deleteXeroTokenAdminByAppAccount(xeroTokenAdmin.getApp_account());
         oauthDao.insertXeroTokenAdmin(xeroTokenAdmin);
+        logger.info("insertXeroTokenAdmin finished");
         return auth_url;
     }
 
     @Override
     @Transactional(value= XeAutoConfig.DEFAULT_TX, rollbackFor=Exception.class)
     public void updateXeroAccessToken(XeroTokenAdmin xeroTokenAdmin) {
+        oauthDao.deleteXeroTokenAdminByAppAccount(xeroTokenAdmin.getApp_account());
         oauthDao.insertXeroTokenAdmin(xeroTokenAdmin);
     }
 }
