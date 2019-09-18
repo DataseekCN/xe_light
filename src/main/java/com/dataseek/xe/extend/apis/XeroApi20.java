@@ -2,6 +2,7 @@ package com.dataseek.xe.extend.apis;
 
 import com.github.scribejava.core.builder.api.DefaultApi20;
 import com.github.scribejava.core.oauth2.bearersignature.BearerSignature;
+import com.github.scribejava.core.oauth2.bearersignature.BearerSignatureAuthorizationRequestHeaderField;
 import com.github.scribejava.core.oauth2.bearersignature.BearerSignatureURIQueryParameter;
 
 public class XeroApi20 extends DefaultApi20 {
@@ -29,6 +30,6 @@ public class XeroApi20 extends DefaultApi20 {
 
     @Override
     public BearerSignature getBearerSignature() {
-        return BearerSignatureURIQueryParameter.instance();
+        return BearerSignatureAuthorizationRequestHeaderField.instance();
     }
 }
