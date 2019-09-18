@@ -2,6 +2,7 @@ package com.dataseek.xe.dao.impl;
 
 import com.dataseek.xe.config.JdbcSupport;
 import com.dataseek.xe.dao.IUserDao;
+import com.dataseek.xe.entity.InfoDetail;
 import com.dataseek.xe.entity.UserInfo;
 import com.dataseek.xe.util.DataUtil;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -77,5 +78,18 @@ public class UserDao implements IUserDao {
         jdbcSupport.update(sqlBd.toString(), mapParam);
     }
 
+    public void insertInfoDetail(InfoDetail userInfo) {
+        StringBuilder sqlBd = new StringBuilder();
+        sqlBd.append("insert into info_detail(user_id,user_name,email,company_name,country) ");
+        sqlBd.append("values(:user_id,:user_name,:email,:company_name,:country)");
+
+        MapSqlParameterSource mapParam = new MapSqlParameterSource();
+        mapParam.addValue("user_id", userInfo.getUserId());
+        mapParam.addValue("user_name", userInfo.getUserName());
+        mapParam.addValue("email", userInfo.getEmail());
+        mapParam.addValue("company_name", userInfo.getCompanyName());
+        mapParam.addValue("country", userInfo.getCountry());
+        jdbcSupport.update(sqlBd.toString(), mapParam);
+    }
 
 }

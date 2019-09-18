@@ -3,6 +3,8 @@ package com.dataseek.xe.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.dataseek.xe.dao.IUserDao;
+import com.dataseek.xe.entity.InfoDetail;
 import com.dataseek.xe.entity.UserInfo;
 import com.dataseek.xe.service.IUserService;
 import com.dataseek.xe.util.DataUtil;
@@ -42,6 +44,9 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private IUserDao userDao;
 
     private String urlHead = "https://openapi.etsy.com/v2";
     private String apiKey = "78qwl864ty5269f469svn6md";
@@ -202,5 +207,29 @@ public class UserController {
             responseDto.setError_message("verify shopname error.");
             return  responseDto;
         }
+    }
+
+
+    @ApiOperation(value = "user info")
+    @RequestMapping("/info")
+    public ResponseDto info(@RequestBody JSONObject json) {
+        ResponseDto responseDto = new ResponseDto();
+        //email合法性校验
+        if (!DataUtil.checkEmail(json.getString("email"))) {
+            responseDto.setStatus(XeConsts.RESPONSE_STATUS_FAILURE);
+            responseDto.setError_message("email format error.");
+            return  responseDto;
+        }
+
+        InfoDetail infoDetail = new InfoDetail();
+        infoDetail.setUserId(json.getString("userId"));
+        infoDetail.setUserName(json.getString("userName"));
+        infoDetail.setEmail(json.getString("email"));
+        infoDetail.setCompanyName(json.getString("companyName"));
+        infoDetail.setCountry(json.getString("country"));
+        userDao.insertInfoDetail(infoDetail);
+
+        responseDto.setStatus(XeConsts.RESPONSE_STATUS_SUCCESS);
+        return  responseDto;
     }
 }
