@@ -48,7 +48,7 @@ public class XeroVisitApi {
             String consumer_key = xeroDeveloperDetail.getConsumer_key();
             String consumer_secret = xeroDeveloperDetail.getConsumer_secret();
             String callback_url = xeroDeveloperDetail.getCallback_url();
-            String scope = "openid offline_access profile email accounting.transactions accounting.reports.read accounting.settings.read accounting.journals.read accounting.contacts accounting.attachments assets projects";
+            String scope = "openid offline_access profile email accounting.settings accounting.transactions accounting.reports.read accounting.settings.read accounting.journals.read accounting.contacts accounting.attachments assets projects";
             service = new ServiceBuilder(consumer_key)
                     .apiSecret(consumer_secret)
                     .callback(callback_url)
