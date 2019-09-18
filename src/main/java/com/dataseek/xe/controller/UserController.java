@@ -58,8 +58,8 @@ public class UserController {
         try {
             UserInfo userDto = new UserInfo();
             userDto.setEmail(json.getString("email"));
-            userDto.setFirstName(json.getString("firstName"));
-            userDto.setLastName(json.getString("lastName"));
+            userDto.setFirstName(json.getString("first_name"));
+            userDto.setLastName(json.getString("last_name"));
             //MD5加密
             String mdStr = DataUtil.EncoderByMd5(json.getString("password"));
             userDto.setPassword(mdStr);
@@ -156,7 +156,7 @@ public class UserController {
     public ResponseDto emailverification(HttpServletRequest request) {
         ResponseDto responseDto = new ResponseDto();
         UserInfo userDto = new UserInfo();
-        userDto.setUserId(request.getParameter("userId"));
+        userDto.setUserId(request.getParameter("user_id"));
 
         List<UserInfo> tmpList = userService.qryUser(userDto);
         if (tmpList == null || tmpList.isEmpty()) {
@@ -222,14 +222,46 @@ public class UserController {
         }
 
         InfoDetail infoDetail = new InfoDetail();
-        infoDetail.setUserId(json.getString("userId"));
-        infoDetail.setUserName(json.getString("userName"));
+        infoDetail.setUserId(json.getString("user_id"));
+        infoDetail.setUserName(json.getString("user_name"));
         infoDetail.setEmail(json.getString("email"));
-        infoDetail.setCompanyName(json.getString("companyName"));
+        infoDetail.setCompanyName(json.getString("company_name"));
         infoDetail.setCountry(json.getString("country"));
         userDao.insertInfoDetail(infoDetail);
 
         responseDto.setStatus(XeConsts.RESPONSE_STATUS_SUCCESS);
         return  responseDto;
+    }
+
+
+    @ApiOperation(value = "change pwd")
+    @RequestMapping("/changepassword")
+    public ResponseDto changepassword(@RequestBody JSONObject json) {
+        ResponseDto responseDto = new ResponseDto();
+        try {
+            String oldPwd = DataUtil.EncoderByMd5(json.getString("old_passwords"));
+            String newPwd = DataUtil.EncoderByMd5(json.getString("new_passwords"));
+
+            UserInfo qryDto = new UserInfo();
+            qryDto.setPassword(oldPwd);
+            List<UserInfo> tmpList = userService.qryUser(qryDto);
+            if (tmpList == null || tmpList.isEmpty()) {
+                responseDto.setStatus(XeConsts.RESPONSE_STATUS_FAILURE);
+                responseDto.setError_message("user does not exist.");
+                return  responseDto;
+            }
+            UserInfo userInfo = tmpList.get(0);
+            userInfo.setPassword(newPwd);
+            userService.updUser(userInfo);
+
+            responseDto.setStatus(XeConsts.RESPONSE_STATUS_SUCCESS);
+            return  responseDto;
+        }
+        catch (Exception ex) {
+            logger.error(ex.toString(), ex);
+            responseDto.setStatus(XeConsts.RESPONSE_STATUS_FAILURE);
+            responseDto.setError_message("change password error.");
+            return  responseDto;
+        }
     }
 }
