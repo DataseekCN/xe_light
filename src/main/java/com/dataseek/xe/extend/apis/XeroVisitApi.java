@@ -95,15 +95,6 @@ public class XeroVisitApi {
         OAuth20Service service = XeroVisitApi.createXeroService(xeroDeveloperDetail);
         if(service!=null){
             try {
-//                String refresh_url = "https://identity.xero.com/connect/token";
-//                OAuthRequest request = new OAuthRequest(Verb.POST, refresh_url);
-//                String authorizationStr = xeroDeveloperDetail.getConsumer_key()+":"+xeroDeveloperDetail.getConsumer_secret();
-//                String authorization = "Basic "+ Base64.encodeBase64String(authorizationStr.getBytes("UTF-8"));
-//                request.addHeader("Authorization",authorization);
-//                request.addHeader("Content-Type","application/x-www-form-urlencoded");
-//                request.addBodyParameter("grant_type","refresh_token");
-//                request.addBodyParameter("refresh_token",refresh_token);
-//                Response response = service.execute(request);
                 access_token = service.refreshAccessToken(refresh_token);
                 System.out.println();
             } catch (IOException e) {
