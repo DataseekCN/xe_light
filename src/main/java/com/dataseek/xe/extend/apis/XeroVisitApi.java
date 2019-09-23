@@ -27,16 +27,20 @@ package com.dataseek.xe.extend.apis;
 import com.dataseek.xe.dao.impl.OauthDao;
 import com.dataseek.xe.entity.XeroDeveloperDetail;
 import com.dataseek.xe.util.BASE64Encoder;
+import com.dataseek.xe.util.HttpUtils;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth20Service;
+import org.apache.http.HttpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.codec.binary.Base64;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class XeroVisitApi {
@@ -64,11 +68,12 @@ public class XeroVisitApi {
         OAuth20Service service = XeroVisitApi.createXeroService(xeroDeveloperDetail);
         if(service!=null){
             String test_url = "https://api.xero.com/connections";
-            OAuthRequest request = new OAuthRequest(Verb.GET, test_url);
-            service.signRequest(access_token,request);
-            Response response = service.execute(request);
-            System.out.println(response.getCode());
-            if(response.getCode()==200){
+            Map<String, String> headers = new HashMap<>();
+            Map<String, String> queryParams = null;
+            headers.put("Authorization","Bearer "+access_token);
+            headers.put("Content-Type","application/json");
+            HttpResponse response = HttpUtils.doGet(test_url,headers,queryParams);
+            if(response.getStatusLine().getStatusCode()==200){
                 status=true;
             }
         }
