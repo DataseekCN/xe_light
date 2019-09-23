@@ -10,6 +10,7 @@ import com.dataseek.xe.entity.XeroTokenAdmin;
 import com.dataseek.xe.extend.apis.XeroVisitApi;
 import com.dataseek.xe.service.IOauthService;
 import com.dataseek.xe.service.ITestService;
+import com.dataseek.xe.util.HttpUtils;
 import com.dataseek.xe.util.XeConsts;
 import com.dataseek.xe.vo.OauthVo;
 import com.dataseek.xe.vo.TestUserVo;
@@ -17,10 +18,13 @@ import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth20Service;
+import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -84,25 +88,17 @@ public class TestController {
     }
 
     @RequestMapping(value="/xero/organisation",method = RequestMethod.GET)
-    private JSONObject fetchXeroOrganisation(@RequestParam String app_account){
-        JSONObject jsonObject = new JSONObject();
+    private JSON fetchXeroOrganisation(@RequestParam String app_account) throws Exception{
+        JSON json = null;
         //查询Xero开发者配置信息
         XeroDeveloperDetail xeroDeveloperDetail = oauthDao.queryXeroDeveloperDetail();
         XeroTokenAdmin xeroTokenAdmin = oauthDao.queryXeroTokenAdminByAppAccount(app_account);
-        OAuth20Service service = XeroVisitApi.createXeroService(xeroDeveloperDetail);
-        String test_url = "https://api.xero.com/connections";
-        OAuthRequest request = new OAuthRequest(Verb.GET, test_url);
-        service.signRequest(xeroTokenAdmin.getAccess_token(),request);
-        try {
-            Response response = service.execute(request);
-            System.out.println(response.getCode());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return jsonObject;
+        Map<String, String> headers = new HashMap<>();
+        Map<String, String> queryParams = null;
+        headers.put("Authorization","Bearer "+xeroTokenAdmin.getAccess_token());
+        headers.put("Content-Type","application/json");
+        HttpResponse response = HttpUtils.doGet("https://api.xero.com/connections",headers,queryParams);
+        json = HttpUtils.getJson(response);
+        return json;
     }
 }

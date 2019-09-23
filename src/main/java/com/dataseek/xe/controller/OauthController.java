@@ -105,12 +105,15 @@ public class OauthController {
                 OAuth2AccessToken accessToken = null;
                 try {
                     accessToken = XeroVisitApi.refreshXeroToken(refresh_token, xeroDeveloperDetail);
+                    access_token = accessToken.getAccessToken();
+                    refresh_token = accessToken.getRefreshToken();
                     Integer expiresIn = accessToken.getExpiresIn();
                     Long currentMills = System.currentTimeMillis();
                     Long expireMills = currentMills+expiresIn;
                     String expire_time = DateUtils.formatDateTimeStrFromMills(expireMills);
                     String update_time = DateUtils.getDateTimeNowStr();
                     xeroTokenAdmin.setAccess_token(access_token);
+                    xeroTokenAdmin.setRefresh_token(refresh_token);
                     xeroTokenAdmin.setExpire_time(expire_time);
                     xeroTokenAdmin.setUpdate_time(update_time);
                     //更新最新access_token至数据库表
