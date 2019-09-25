@@ -6,7 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dataseek.xe.dao.IUserDao;
 import com.dataseek.xe.entity.InfoDetail;
 import com.dataseek.xe.entity.UserInfo;
-import com.dataseek.xe.service.IUserService;
+import com.dataseek.xe.service.base.IUserService;
 import com.dataseek.xe.util.DataUtil;
 import com.dataseek.xe.util.ResponseDto;
 import com.dataseek.xe.util.XeConsts;

@@ -1,8 +1,8 @@
-package com.dataseek.xe.service.impl;
+package com.dataseek.xe.service.base.impl;
 
 import com.dataseek.xe.dao.IUserDao;
 import com.dataseek.xe.entity.UserInfo;
-import com.dataseek.xe.service.IUserService;
+import com.dataseek.xe.service.base.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

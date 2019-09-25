@@ -1,4 +1,4 @@
-package com.dataseek.xe.service;
+package com.dataseek.xe.service.base;
 
 import com.dataseek.xe.entity.UserInfo;
 

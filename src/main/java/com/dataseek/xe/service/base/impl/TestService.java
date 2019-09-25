@@ -1,8 +1,8 @@
-package com.dataseek.xe.service.impl;
+package com.dataseek.xe.service.base.impl;
 
 import com.dataseek.xe.dao.ITestDao;
 import com.dataseek.xe.entity.TestUser;
-import com.dataseek.xe.service.ITestService;
+import com.dataseek.xe.service.base.ITestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

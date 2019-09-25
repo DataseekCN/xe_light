@@ -22,15 +22,14 @@
  * User: taosm
  * DateTime: 2019-08-21 14
  */
-package com.dataseek.xe.service.impl;
+package com.dataseek.xe.service.base.impl;
 
 import com.dataseek.xe.config.XeAutoConfig;
 import com.dataseek.xe.dao.IOauthDao;
-import com.dataseek.xe.dao.impl.OauthDao;
 import com.dataseek.xe.entity.*;
 import com.dataseek.xe.extend.apis.EtsyVisitApi;
 import com.dataseek.xe.extend.apis.XeroVisitApi;
-import com.dataseek.xe.service.IOauthService;
+import com.dataseek.xe.service.base.IOauthService;
 import com.dataseek.xe.util.XeConsts;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import org.slf4j.Logger;

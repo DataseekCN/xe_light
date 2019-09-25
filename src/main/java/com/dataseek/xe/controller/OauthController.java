@@ -7,7 +7,8 @@ import com.dataseek.xe.entity.OauthInfo;
 import com.dataseek.xe.entity.XeroDeveloperDetail;
 import com.dataseek.xe.entity.XeroTokenAdmin;
 import com.dataseek.xe.extend.apis.XeroVisitApi;
-import com.dataseek.xe.service.IOauthService;
+import com.dataseek.xe.service.base.IOauthService;
+import com.dataseek.xe.util.AppConfig;
 import com.dataseek.xe.util.DateUtils;
 import com.dataseek.xe.util.XeConsts;
 import com.dataseek.xe.vo.OauthVo;
@@ -16,8 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 
 @RestController
 @CrossOrigin
@@ -72,7 +71,7 @@ public class OauthController {
     public OauthVo xeroTokenVerify(@RequestParam String app_account){
         OauthVo oauthVo = new OauthVo();
         //查询Xero开发者配置信息
-        XeroDeveloperDetail xeroDeveloperDetail = oauthDao.queryXeroDeveloperDetail();
+        XeroDeveloperDetail xeroDeveloperDetail = AppConfig.xeroDeveloperDetail;
         //判断APP账户下是否存在access token
         boolean tokenIsExist = oauthService.checkXeroTokenExist(app_account);
         //不存在token(否)
@@ -151,7 +150,7 @@ public class OauthController {
     public OauthVo xeroTokenApply(@RequestParam String code,@RequestParam String state){
         OauthVo oauthVo = new OauthVo();
         //查询Xero开发者配置信息
-        XeroDeveloperDetail xeroDeveloperDetail = oauthDao.queryXeroDeveloperDetail();
+        XeroDeveloperDetail xeroDeveloperDetail = AppConfig.xeroDeveloperDetail;
         //根据state查询账户token绑定信息记录
         XeroTokenAdmin xeroTokenAdmin = oauthDao.queryXeroTokenAdminByState(state);
         //申请access token
