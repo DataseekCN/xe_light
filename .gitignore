@@ -162,3 +162,4 @@ fabric.properties
 !.vscode/launch.json
 !.vscode/extensions.json
 
+/src/main/resources/application.yml
