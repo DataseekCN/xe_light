@@ -85,7 +85,7 @@ public class UserController {
 
             //发送激活邮件
             String emailMsg = "Welcome to register as a member, " +
-                    "<a href='http://13.239.114.47:12006/user/emailverification?userId=" +
+                    "<a href='http://52.64.54.89:12006/user/emailverification?userId=" +
                     userDto.getUserId() + "'>click here to activate.</a>";
             DataUtil.sendEmail(userDto.getEmail(), emailMsg);
             //入库
