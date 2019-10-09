@@ -1,11 +1,25 @@
 package com.dataseek.xe.util;
 
+import com.dataseek.xe.entity.AccountInfo;
+
+import java.util.List;
+
 public class ResponseDto extends BaseVo {
     private String user_id;
 
     private String user_session_id;
 
     private boolean verified;
+
+    private List<AccountInfo> accounts;
+
+    public List<AccountInfo> getAccounts() {
+        return accounts;
+    }
+
+    public void setAccounts(List<AccountInfo> accounts) {
+        this.accounts = accounts;
+    }
 
     public boolean isVerified() {
         return verified;

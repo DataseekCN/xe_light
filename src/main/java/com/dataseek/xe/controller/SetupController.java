@@ -1,17 +1,20 @@
 package com.dataseek.xe.controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dataseek.xe.dao.IOauthDao;
 import com.dataseek.xe.dao.IUserDao;
+import com.dataseek.xe.entity.AccountInfo;
 import com.dataseek.xe.entity.InfoDetail;
 import com.dataseek.xe.entity.UserInfo;
 import com.dataseek.xe.entity.XeroTokenAdmin;
+import com.dataseek.xe.extend.apis.XeroVisitApi;
+import com.dataseek.xe.service.base.IOauthService;
 import com.dataseek.xe.service.base.IUserService;
-import com.dataseek.xe.util.DataUtil;
-import com.dataseek.xe.util.ResponseDto;
-import com.dataseek.xe.util.XeConsts;
+import com.dataseek.xe.util.*;
+import com.github.scribejava.core.model.OAuth2AccessToken;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.http.HttpEntity;
@@ -30,6 +33,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -43,6 +47,9 @@ public class SetupController {
 
     @Autowired
     private IOauthDao oauthDao;
+
+    @Autowired
+    private IOauthService oauthService;
 
     private String urlHead = "https://openapi.etsy.com/v2";
     private String apiKey = "78qwl864ty5269f469svn6md";
@@ -86,19 +93,68 @@ public class SetupController {
 
     @ApiOperation(value = "get accounts from xero")
     @RequestMapping("/xero/accounts")
-    public void accounts(@RequestBody JSONObject json) {
+    public ResponseDto accounts(@RequestBody JSONObject json) throws Exception {
+        ResponseDto responseDto = new ResponseDto();
         String appAccount = json.getString("app_account");
-        String tenantId = json.getString("tenantId");
-
         XeroTokenAdmin xeroTokenAdmin = oauthDao.queryXeroTokenAdminByAppAccount(appAccount);
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Authorization", "Bearer "+xeroTokenAdmin.getAccess_token());
-        headers.put("Content-Type", "application/json");
-        headers.put("Xero-tenant-id", tenantId);
+        if (xeroTokenAdmin != null) {
+            //取tenantId
+            Map<String, String> headers = new HashMap<>();
+            String accessToken = xeroTokenAdmin.getAccess_token();
+            headers.put("Authorization","Bearer " + accessToken);
+            headers.put("Content-Type","application/json");
+            HttpResponse response = HttpUtils.doGet("https://api.xero.com/connections", headers, null);
+            JSON respJson = null;
+            //outh未授权
+            if(response.getStatusLine().getStatusCode() == 401){
+                OAuth2AccessToken token = XeroVisitApi.refreshXeroToken(xeroTokenAdmin.getRefresh_token(), AppConfig.xeroDeveloperDetail);
+                //如果刷新成功
+                if(token!=null) {
+                    accessToken = token.getAccessToken();
+                    Integer expiresIn = token.getExpiresIn();
+                    Long currentMills = System.currentTimeMillis();
+                    Long expireMills = currentMills + expiresIn * 1000;
+                    String expire_time = DateUtils.formatDateTimeStrFromMills(expireMills);
+                    String update_time = DateUtils.getDateTimeNowStr();
+                    xeroTokenAdmin.setAccess_token(accessToken);
+                    xeroTokenAdmin.setRefresh_token(token.getRefreshToken());
+                    xeroTokenAdmin.setExpire_time(expire_time);
+                    xeroTokenAdmin.setUpdate_time(update_time);
+                    //更新最新access_token至数据库表
+                    oauthService.updateXeroAccessToken(xeroTokenAdmin);
 
+                    headers.put("Authorization","Bearer " + accessToken);
+                    response = HttpUtils.doGet("https://api.xero.com/connections", headers, null);
+                }
+            }
+            respJson = HttpUtils.getJson(response);
+            String tenantId = ((JSONArray)respJson).getJSONObject(0).getString("tenantId");
 
+            headers = new HashMap<>();
+            headers.put("Authorization", "Bearer " + accessToken);
+            headers.put("Content-Type", "application/json");
+            headers.put("Xero-tenant-id", tenantId);
+            response = HttpUtils.
+                    doGet("https://api.xero.com/api.xro/2.0/Accounts", headers, null);
+            respJson = HttpUtils.getJson(response);
+            JSONArray acctArray = ((JSONObject)respJson).getJSONArray("Accounts");
+            List<AccountInfo> acctInfos = new ArrayList<>();
+            for (int i = 0; i < acctArray.size(); i++) {
+                JSONObject jObj = acctArray.getJSONObject(i);
+                AccountInfo acctInfo = new AccountInfo();
+                acctInfo.setCode(jObj.getString("Code"));
+                acctInfo.setName(jObj.getString("Name"));
+                acctInfos.add(acctInfo);
+            }
 
+            responseDto.setAccounts(acctInfos);
+
+        }
+        else {
+            logger.info("not find access token in accounts.");
+        }
+
+        responseDto.setStatus(XeConsts.RESPONSE_STATUS_SUCCESS);
+        return  responseDto;
     }
-
-
 }
