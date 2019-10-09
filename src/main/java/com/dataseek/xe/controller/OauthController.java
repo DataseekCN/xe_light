@@ -146,7 +146,7 @@ public class OauthController {
     }
 
     //申请xero的access token
-    @RequestMapping(value="/xero/token_apply",method = RequestMethod.GET)
+    @RequestMapping(value="/xero/token_apply")
     public OauthVo xeroTokenApply(@RequestParam String code,@RequestParam String state){
         OauthVo oauthVo = new OauthVo();
         //查询Xero开发者配置信息

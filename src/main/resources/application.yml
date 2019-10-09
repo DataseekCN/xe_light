@@ -13,12 +13,12 @@ http:
   port: 12006
 xe:
   driver: com.mysql.jdbc.Driver
-  jdbc_url: jdbc:mysql://127.0.0.1:13306/xero?useUnicode=true&characterEncoding=utf8&useSSL=false
+  jdbc_url: jdbc:mysql://xe-light-db1.chlw7qiuht3u.ap-southeast-2.rds.amazonaws.com:13306/xero?useUnicode=true&characterEncoding=utf8&useSSL=false
   db_username: dataseek
   db_password: Njit2018!!!!!!
-  initialSize: 20
-  maxActive: 30
-  maxIdle: 10
+  initialSize: 5
+  maxActive: 10
+  maxIdle: 5
   minIdle: 1
   maxWait: 60000
   timeBetweenEvictionRunsMillis: 3000
@@ -29,7 +29,7 @@ spring:
     datasource:
         username: dataseek
         password: Njit2018!!!!!!
-        jdbc-url: jdbc:mysql://127.0.0.1:13306/xero?useUnicode=true&characterEncoding=utf8&useSSL=false
+        jdbc-url: jdbc:mysql:// xe-light-db1.chlw7qiuht3u.ap-southeast-2.rds.amazonaws.com:13306/xero?useUnicode=true&characterEncoding=utf8&useSSL=false
         driver-class-name: com.mysql.jdbc.Driver
     profiles:
         active: dev

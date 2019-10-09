@@ -45,6 +45,6 @@ public class InitDataListener implements InitializingBean, ServletContextAware {
     @Override
     public void setServletContext(ServletContext servletContext) {
         AppConfig.xeroDeveloperDetail = initService.InitXeroDeveloperDetail();
-        System.out.println();
+        System.out.println("开发者信息初始化完毕！");
     }
 }
