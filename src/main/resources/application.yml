@@ -29,7 +29,7 @@ spring:
     datasource:
         username: dataseek
         password: Njit2018!!!!!!
-        jdbc-url: jdbc:mysql:// xe-light-db1.chlw7qiuht3u.ap-southeast-2.rds.amazonaws.com:13306/xero?useUnicode=true&characterEncoding=utf8&useSSL=false
+        jdbc-url: jdbc:mysql://xe-light-db1.chlw7qiuht3u.ap-southeast-2.rds.amazonaws.com:13306/xero?useUnicode=true&characterEncoding=utf8&useSSL=false
         driver-class-name: com.mysql.jdbc.Driver
     profiles:
         active: dev
