@@ -111,7 +111,7 @@ public class OauthController {
                         refresh_token = accessToken.getRefreshToken();
                         Integer expiresIn = accessToken.getExpiresIn();
                         Long currentMills = System.currentTimeMillis();
-                        Long expireMills = currentMills + expiresIn;
+                        Long expireMills = currentMills + expiresIn * 1000;
                         String expire_time = DateUtils.formatDateTimeStrFromMills(expireMills);
                         String update_time = DateUtils.getDateTimeNowStr();
                         xeroTokenAdmin.setAccess_token(access_token);

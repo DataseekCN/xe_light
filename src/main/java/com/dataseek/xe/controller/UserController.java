@@ -48,9 +48,6 @@ public class UserController {
     @Autowired
     private IUserDao userDao;
 
-    private String urlHead = "https://openapi.etsy.com/v2";
-    private String apiKey = "78qwl864ty5269f469svn6md";
-
     @ApiOperation(value = "sign up")
     @RequestMapping("/signup")
     public ResponseDto signup(@RequestBody JSONObject json) {
@@ -171,44 +168,6 @@ public class UserController {
         responseDto.setStatus(XeConsts.RESPONSE_STATUS_SUCCESS);
         return  responseDto;
     }
-
-    @ApiOperation(value = "verify shopname")
-    @RequestMapping("/verifyshopname")
-    public ResponseDto verifyshopname(@RequestBody JSONObject json) {
-        ResponseDto responseDto = new ResponseDto();
-        String url = urlHead + "/shops/" + json.getString("shopname");
-        try {
-            //添加get方式的参数
-            URIBuilder uriBuilder = new URIBuilder(url);
-            List<NameValuePair> list = new LinkedList<>();
-            BasicNameValuePair param1 = new BasicNameValuePair("api_key", apiKey);
-            list.add(param1);
-            uriBuilder.setParameters(list);
-            //调用及返回处理
-            HttpGet httpGet = new HttpGet(uriBuilder.build());
-            CloseableHttpClient httpclient = HttpClients.createDefault();
-            HttpResponse response = httpclient.execute(httpGet);
-            HttpEntity entity = response.getEntity();
-            String body = EntityUtils.toString(entity);
-            JSONObject jsonResult = JSONObject.parseObject(body);
-            JSONArray resultAy = jsonResult.getJSONArray("results");
-            if (resultAy != null && !resultAy.isEmpty()) {
-                responseDto.setVerified(true);
-            }
-            else {
-                responseDto.setVerified(false);
-            }
-            responseDto.setStatus(XeConsts.RESPONSE_STATUS_SUCCESS);
-            return  responseDto;
-        }
-        catch (Exception ex) {
-            logger.error(ex.toString(), ex);
-            responseDto.setStatus(XeConsts.RESPONSE_STATUS_FAILURE);
-            responseDto.setError_message("verify shopname error.");
-            return  responseDto;
-        }
-    }
-
 
     @ApiOperation(value = "user info")
     @RequestMapping("/info")
