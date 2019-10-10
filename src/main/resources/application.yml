@@ -7,7 +7,7 @@ server:
     max-connections: 30000
   ssl:
     key-store-type: JKS
-    key-store: ../tomcat.key
+    key-store: tomcat.key
     key-store-password: dataseek2019
 http:
   port: 12006
