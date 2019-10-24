@@ -72,76 +72,81 @@ public class OauthController {
         OauthVo oauthVo = new OauthVo();
         //查询Xero开发者配置信息
         XeroDeveloperDetail xeroDeveloperDetail = AppConfig.xeroDeveloperDetail;
-        //判断APP账户下是否存在access token
-        boolean tokenIsExist = oauthService.checkXeroTokenExist(app_account);
-        //不存在token(否)
-        if(!tokenIsExist){
-            //申请授权链接
-            String auth_url = oauthService.requestXeroAuthUrl(app_account,xeroDeveloperDetail);
-            oauthVo.setStatus("success");
-            oauthVo.setAuth_status(XeConsts.AUTH_STATUS_WAIT_AUTHORIZE);
-            oauthVo.setGrant_url(auth_url);
-            return oauthVo;
-        }
-        //存在token(是)
-        else{
-            //判断access token是否过期
-            //判断access token是否过期--根据APP账户名查询access token
-            XeroTokenAdmin xeroTokenAdmin = oauthDao.queryXeroTokenAdminByAppAccount(app_account);
-            String access_token = xeroTokenAdmin.getAccess_token();
-            String refresh_token = xeroTokenAdmin.getRefresh_token();
-            boolean token_status = false;
-            try{
-                token_status = XeroVisitApi.verifyXeroTokenExpireStatus(access_token,xeroDeveloperDetail);
-            }
-            catch (Exception e){
-                oauthVo.setStatus("failure");
-                oauthVo.setError_msg(e.getMessage());
-                return oauthVo;
-            }
-            //access token已过期
-            if(!token_status) {
-                //刷新access token
-                OAuth2AccessToken accessToken = null;
-                try {
-                    accessToken = XeroVisitApi.refreshXeroToken(refresh_token, xeroDeveloperDetail);
-                    //如果刷新成功
-                    if(accessToken!=null) {
-                        access_token = accessToken.getAccessToken();
-                        refresh_token = accessToken.getRefreshToken();
-                        Integer expiresIn = accessToken.getExpiresIn();
-                        Long currentMills = System.currentTimeMillis();
-                        Long expireMills = currentMills + expiresIn * 1000;
-                        String expire_time = DateUtils.formatDateTimeStrFromMills(expireMills);
-                        String update_time = DateUtils.getDateTimeNowStr();
-                        xeroTokenAdmin.setAccess_token(access_token);
-                        xeroTokenAdmin.setRefresh_token(refresh_token);
-                        xeroTokenAdmin.setExpire_time(expire_time);
-                        xeroTokenAdmin.setUpdate_time(update_time);
-                        //更新最新access_token至数据库表
-                        oauthService.updateXeroAccessToken(xeroTokenAdmin);
-                    }
-                    else{
-                        //刷新失败则重新申请access token
-                        //申请授权链接
-                        String auth_url = oauthService.requestXeroAuthUrl(app_account,xeroDeveloperDetail);
-                        oauthVo.setStatus("success");
-                        oauthVo.setAuth_status(XeConsts.AUTH_STATUS_WAIT_AUTHORIZE);
-                        oauthVo.setGrant_url(auth_url);
-                        return oauthVo;
-                    }
-                }
-                catch (Exception e){
-                    oauthVo.setStatus("failure");
-                    oauthVo.setError_msg(e.getMessage());
-                    return oauthVo;
-                }
-
-            }
-            oauthVo.setStatus("success");
-            oauthVo.setAuth_status(XeConsts.AUTH_STATUS_AUTHORIZED);
-            //oauthVo.setAccess_token(access_token);
-        }
+//        //判断APP账户下是否存在access token
+//        boolean tokenIsExist = oauthService.checkXeroTokenExist(app_account);
+//        //不存在token(否)
+//        if(!tokenIsExist){
+//            //申请授权链接
+//            String auth_url = oauthService.requestXeroAuthUrl(app_account,xeroDeveloperDetail);
+//            oauthVo.setStatus("success");
+//            oauthVo.setAuth_status(XeConsts.AUTH_STATUS_WAIT_AUTHORIZE);
+//            oauthVo.setGrant_url(auth_url);
+//            return oauthVo;
+//        }
+//        //存在token(是)
+//        else{
+//            //判断access token是否过期
+//            //判断access token是否过期--根据APP账户名查询access token
+//            XeroTokenAdmin xeroTokenAdmin = oauthDao.queryXeroTokenAdminByAppAccount(app_account);
+//            String access_token = xeroTokenAdmin.getAccess_token();
+//            String refresh_token = xeroTokenAdmin.getRefresh_token();
+//            boolean token_status = false;
+//            try{
+//                token_status = XeroVisitApi.verifyXeroTokenExpireStatus(access_token,xeroDeveloperDetail);
+//            }
+//            catch (Exception e){
+//                oauthVo.setStatus("failure");
+//                oauthVo.setError_msg(e.getMessage());
+//                return oauthVo;
+//            }
+//            //access token已过期
+//            if(!token_status) {
+//                //刷新access token
+//                OAuth2AccessToken accessToken = null;
+//                try {
+//                    accessToken = XeroVisitApi.refreshXeroToken(refresh_token, xeroDeveloperDetail);
+//                    //如果刷新成功
+//                    if(accessToken!=null) {
+//                        access_token = accessToken.getAccessToken();
+//                        refresh_token = accessToken.getRefreshToken();
+//                        Integer expiresIn = accessToken.getExpiresIn();
+//                        Long currentMills = System.currentTimeMillis();
+//                        Long expireMills = currentMills + expiresIn * 1000;
+//                        String expire_time = DateUtils.formatDateTimeStrFromMills(expireMills);
+//                        String update_time = DateUtils.getDateTimeNowStr();
+//                        xeroTokenAdmin.setAccess_token(access_token);
+//                        xeroTokenAdmin.setRefresh_token(refresh_token);
+//                        xeroTokenAdmin.setExpire_time(expire_time);
+//                        xeroTokenAdmin.setUpdate_time(update_time);
+//                        //更新最新access_token至数据库表
+//                        oauthService.updateXeroAccessToken(xeroTokenAdmin);
+//                    }
+//                    else{
+//                        //刷新失败则重新申请access token
+//                        //申请授权链接
+//                        String auth_url = oauthService.requestXeroAuthUrl(app_account,xeroDeveloperDetail);
+//                        oauthVo.setStatus("success");
+//                        oauthVo.setAuth_status(XeConsts.AUTH_STATUS_WAIT_AUTHORIZE);
+//                        oauthVo.setGrant_url(auth_url);
+//                        return oauthVo;
+//                    }
+//                }
+//                catch (Exception e){
+//                    oauthVo.setStatus("failure");
+//                    oauthVo.setError_msg(e.getMessage());
+//                    return oauthVo;
+//                }
+//
+//            }
+//            oauthVo.setStatus("success");
+//            oauthVo.setAuth_status(XeConsts.AUTH_STATUS_AUTHORIZED);
+//            //oauthVo.setAccess_token(access_token);
+//        }
+        //改成调用一次token_verify,就做一次grant
+        String auth_url = oauthService.requestXeroAuthUrl(app_account,xeroDeveloperDetail);
+        oauthVo.setStatus("success");
+        oauthVo.setAuth_status(XeConsts.AUTH_STATUS_WAIT_AUTHORIZE);
+        oauthVo.setGrant_url(auth_url);
         return oauthVo;
     }
 
