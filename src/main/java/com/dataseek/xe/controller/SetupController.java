@@ -6,10 +6,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dataseek.xe.dao.IOauthDao;
 import com.dataseek.xe.dao.IUserDao;
-import com.dataseek.xe.entity.AccountInfo;
-import com.dataseek.xe.entity.InfoDetail;
-import com.dataseek.xe.entity.UserInfo;
-import com.dataseek.xe.entity.XeroTokenAdmin;
+import com.dataseek.xe.entity.*;
 import com.dataseek.xe.extend.apis.XeroVisitApi;
 import com.dataseek.xe.service.base.IOauthService;
 import com.dataseek.xe.service.base.IUserService;
@@ -52,7 +49,7 @@ public class SetupController {
     private IOauthService oauthService;
 
     private String urlHead = "https://openapi.etsy.com/v2";
-    private String apiKey = "78qwl864ty5269f469svn6md";
+    //private String apiKey = "78qwl864ty5269f469svn6md";
 
     @ApiOperation(value = "verify shopname")
     @RequestMapping("/etzy/verifyshopname")
@@ -60,26 +57,40 @@ public class SetupController {
         ResponseDto responseDto = new ResponseDto();
         String url = urlHead + "/shops/" + json.getString("shopname");
         try {
-            //添加get方式的参数
-            URIBuilder uriBuilder = new URIBuilder(url);
-            List<NameValuePair> list = new LinkedList<>();
-            BasicNameValuePair param1 = new BasicNameValuePair("api_key", apiKey);
-            list.add(param1);
-            uriBuilder.setParameters(list);
-            //调用及返回处理
-            HttpGet httpGet = new HttpGet(uriBuilder.build());
-            CloseableHttpClient httpclient = HttpClients.createDefault();
-            HttpResponse response = httpclient.execute(httpGet);
-            HttpEntity entity = response.getEntity();
-            String body = EntityUtils.toString(entity);
-            JSONObject jsonResult = JSONObject.parseObject(body);
-            JSONArray resultAy = jsonResult.getJSONArray("results");
+//            //添加get方式的参数
+//            URIBuilder uriBuilder = new URIBuilder(url);
+//            List<NameValuePair> list = new LinkedList<>();
+//            BasicNameValuePair param1 = new BasicNameValuePair("api_key", apiKey);
+//            list.add(param1);
+//            uriBuilder.setParameters(list);
+//            //调用及返回处理
+//            HttpGet httpGet = new HttpGet(uriBuilder.build());
+//            CloseableHttpClient httpclient = HttpClients.createDefault();
+//            HttpResponse response = httpclient.execute(httpGet);
+//            HttpEntity entity = response.getEntity();
+//            String body = EntityUtils.toString(entity);
+//            JSONObject jsonResult = JSONObject.parseObject(body);
+//            JSONArray resultAy = jsonResult.getJSONArray("results");
+//            if (resultAy != null && !resultAy.isEmpty()) {
+//                responseDto.setVerified(true);
+//            }
+//            else {
+//                responseDto.setVerified(false);
+//            }
+
+            EtsyDeveloperDetail etsyDeveloperDetail = oauthDao.queryEtsyDeveloperDetail();
+            Map<String, String> qryParam = new HashMap<>();
+            qryParam.put("api_key", etsyDeveloperDetail.getConsumer_key());
+            HttpResponse response = HttpUtils.doGet(url, null, qryParam);
+            JSON respJson = HttpUtils.getJson(response);
+            JSONArray resultAy = ((JSONObject)respJson).getJSONArray("results");
             if (resultAy != null && !resultAy.isEmpty()) {
                 responseDto.setVerified(true);
             }
             else {
                 responseDto.setVerified(false);
             }
+
             responseDto.setStatus(XeConsts.RESPONSE_STATUS_SUCCESS);
             return  responseDto;
         }

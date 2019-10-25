@@ -84,9 +84,12 @@ public class HttpUtils {
     public static HttpResponse doGet(String url,Map<String, String> headers,Map<String, String> queryParams)throws Exception{
         HttpClient httpClient = wrapClient(url);
         HttpGet request = new HttpGet(buildUrl(url,queryParams));
-        for (Map.Entry<String, String> e : headers.entrySet()) {
-            request.addHeader(e.getKey(), e.getValue());
+        if (headers != null) {
+            for (Map.Entry<String, String> e : headers.entrySet()) {
+                request.addHeader(e.getKey(), e.getValue());
+            }
         }
+
         HttpResponse response = httpClient.execute(request);
         return response;
     }
@@ -96,9 +99,12 @@ public class HttpUtils {
                                     Map<String, String> bodyParams) throws Exception{
         HttpClient httpClient = wrapClient(url);
         HttpPost request = new HttpPost(buildUrl(url,queryParams));
-        for (Map.Entry<String, String> e : headers.entrySet()) {
-            request.addHeader(e.getKey(), e.getValue());
+        if (headers != null) {
+            for (Map.Entry<String, String> e : headers.entrySet()) {
+                request.addHeader(e.getKey(), e.getValue());
+            }
         }
+
         if (bodyParams != null) {
             List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
             for (String key : bodyParams.keySet()) {
