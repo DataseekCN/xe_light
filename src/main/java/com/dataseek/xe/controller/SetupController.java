@@ -46,6 +46,9 @@ public class SetupController {
     private IOauthDao oauthDao;
 
     @Autowired
+    private IUserDao userDao;
+
+    @Autowired
     private IOauthService oauthService;
 
     private String urlHead = "https://openapi.etsy.com/v2";
@@ -164,6 +167,34 @@ public class SetupController {
         else {
             logger.info("not find access token in accounts.");
         }
+
+        responseDto.setStatus(XeConsts.RESPONSE_STATUS_SUCCESS);
+        return  responseDto;
+    }
+
+    @ApiOperation(value = "price plan submit")
+    @RequestMapping("/submit")
+    public ResponseDto pricePlanSubmit(@RequestBody JSONObject json) throws Exception {
+        ResponseDto responseDto = new ResponseDto();
+        JSONObject formOb = json.getJSONObject("form");
+
+        PricePlanInfo pricePlan = new PricePlanInfo();
+        pricePlan.setUserId(formOb.getString("userId"));
+        pricePlan.setEtsyShopName(formOb.getString("etsyShopName"));
+        pricePlan.setSyncFromDate(formOb.getString("syncFromDate"));
+        pricePlan.setCustInfoHandle(formOb.getString("customerInfoHandle"));
+        pricePlan.setXeroSaleAcct(formOb.getString("xeroSalesAccount"));
+        pricePlan.setXeroExpenseAcct(formOb.getString("xeroExpenseAccount"));
+        pricePlan.setXeroShipAcct(formOb.getString("xeroShippingAccount"));
+        pricePlan.setListHandle(formOb.getString("listingInfoHandle"));
+        pricePlan.setSubsPlan(formOb.getString("subscriptionPlan"));
+        pricePlan.setBackupOpt(formOb.getString("backupOption"));
+        pricePlan.setCcName(formOb.getString("ccName"));
+        pricePlan.setCcEmail(formOb.getString("ccEmail"));
+        pricePlan.setCcCard(formOb.getString("ccCard"));
+        pricePlan.setCcExpDate(formOb.getString("ccExpDate"));
+        pricePlan.setCcCsv(formOb.getString("ccCSV"));
+        userDao.insertPricePlan(pricePlan);
 
         responseDto.setStatus(XeConsts.RESPONSE_STATUS_SUCCESS);
         return  responseDto;
