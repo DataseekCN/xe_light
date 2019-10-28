@@ -137,6 +137,7 @@ public class UserController {
             userService.updUser(userInfo);
 
             responseDto.setUser_session_id(sessionId);
+            responseDto.setUser_id(userInfo.getUserId());
             responseDto.setStatus(XeConsts.RESPONSE_STATUS_SUCCESS);
             return  responseDto;
         }
