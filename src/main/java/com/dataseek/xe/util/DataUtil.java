@@ -85,16 +85,27 @@ public class DataUtil {
     public static void sendEmail(String toAddress, String emailMsg) throws AddressException, MessagingException {
         // 创建Properties 类用于记录邮箱的一些属性
         Properties props = new Properties();
+//        // 表示SMTP发送邮件，必须进行身份验证
+//        props.put("mail.smtp.auth", "true");
+//        //此处填写SMTP服务器
+//        props.put("mail.smtp.host", "smtp.qq.com");
+//        //端口号，QQ邮箱给出了两个端口，但是另一个我一直使用不了，所以就给出这一个587
+//        props.put("mail.smtp.port", "587");
+//        // 此处填写你的账号
+//        props.put("mail.user", "125863528@qq.com");
+//        // 此处的密码就是前面说的16位STMP口令
+//        props.put("mail.password", "drupfkfnhkurbiba");
         // 表示SMTP发送邮件，必须进行身份验证
         props.put("mail.smtp.auth", "true");
         //此处填写SMTP服务器
-        props.put("mail.smtp.host", "smtp.qq.com");
+        props.put("mail.smtp.host", "mail.dataseek.info");
         //端口号，QQ邮箱给出了两个端口，但是另一个我一直使用不了，所以就给出这一个587
         props.put("mail.smtp.port", "587");
         // 此处填写你的账号
-        props.put("mail.user", "125863528@qq.com");
+        props.put("mail.user", "etsy@dataseek.info");
         // 此处的密码就是前面说的16位STMP口令
-        props.put("mail.password", "drupfkfnhkurbiba");
+        props.put("mail.password", "Dataseek2019!");
+
 
         // 构建授权信息，用于进行SMTP进行身份验证
         Authenticator authenticator = new Authenticator() {
