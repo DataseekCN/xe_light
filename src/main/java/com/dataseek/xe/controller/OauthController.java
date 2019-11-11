@@ -54,8 +54,11 @@ public class OauthController {
     }
 	
 	//用户申请etsy的access token
-    @RequestMapping(value="/etsy/token_apply",method = RequestMethod.GET)
-    public JSONObject etsyTokenApply(@RequestParam String oauth_token,@RequestParam String oauth_verifier){
+    @RequestMapping(value="/etsy/token_apply",method = RequestMethod.POST)
+    //public JSONObject etsyTokenApply(@RequestParam String oauth_token,@RequestParam String oauth_verifier){
+    public JSONObject etsyTokenApply(@RequestBody JSONObject json){
+        String oauth_token = json.getString("oauth_token");
+        String oauth_verifier = json.getString("oauth_verifier");
         OauthVo oauthVo = new OauthVo();
         JSONObject jsonObject = (JSONObject)JSON.toJSON(oauthVo);
         OauthInfo oauthInfo = oauthService.applyEtsyAccessToken(oauth_token,oauth_verifier);
@@ -152,7 +155,10 @@ public class OauthController {
 
     //申请xero的access token
     @RequestMapping(value="/xero/token_apply")
-    public OauthVo xeroTokenApply(@RequestParam String code,@RequestParam String state){
+    //public OauthVo xeroTokenApply(@RequestParam String code,@RequestParam String state){
+    public OauthVo xeroTokenApply(@RequestBody JSONObject json){
+        String code = json.getString("code");
+        String state = json.getString("state");
         OauthVo oauthVo = new OauthVo();
         //查询Xero开发者配置信息
         XeroDeveloperDetail xeroDeveloperDetail = AppConfig.xeroDeveloperDetail;
