@@ -98,11 +98,11 @@ public class DataUtil {
         // 表示SMTP发送邮件，必须进行身份验证
         props.put("mail.smtp.auth", "true");
         //此处填写SMTP服务器
-        props.put("mail.smtp.host", "mail.dataseek.info");
+        props.put("mail.smtp.host", "mail.exsync.run");
         //端口号，QQ邮箱给出了两个端口，但是另一个我一直使用不了，所以就给出这一个587
         props.put("mail.smtp.port", "587");
         // 此处填写你的账号
-        props.put("mail.user", "etsy@dataseek.info");
+        props.put("mail.user", "hello@exsync.run");
         // 此处的密码就是前面说的16位STMP口令
         props.put("mail.password", "Dataseek2019!");
 
