@@ -120,12 +120,12 @@
             <version>27.1-jre</version>
         </dependency>
 
-        <!-- 发送邮件-->
-        <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.4.5</version>
-        </dependency>
+        <!--&lt;!&ndash; 发送邮件&ndash;&gt;-->
+        <!--<dependency>-->
+            <!--<groupId>javax.mail</groupId>-->
+            <!--<artifactId>mail</artifactId>-->
+            <!--<version>1.4.5</version>-->
+        <!--</dependency>-->
 
         <!-- http请求客户端-->
         <dependency>
@@ -141,7 +141,7 @@
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
-            <version>1.4</version>
+            <version>1.4.5</version>
         </dependency>
 
     </dependencies>

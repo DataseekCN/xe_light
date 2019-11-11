@@ -1,6 +1,7 @@
 package com.dataseek.xe.util;
 
 import com.dataseek.xe.controller.UserController;
+import com.sun.mail.util.MailSSLSocketFactory;
 import jdk.internal.dynalink.beans.StaticClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,10 +12,12 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
@@ -100,11 +103,22 @@ public class DataUtil {
         //此处填写SMTP服务器
         props.put("mail.smtp.host", "mail.exsync.run");
         //端口号，QQ邮箱给出了两个端口，但是另一个我一直使用不了，所以就给出这一个587
-        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.port", "465");
         // 此处填写你的账号
         props.put("mail.user", "hello@exsync.run");
         // 此处的密码就是前面说的16位STMP口令
         props.put("mail.password", "Dataseek2019!");
+
+        // 开启安全协议，SSL加密
+        MailSSLSocketFactory sf = null;
+        try {
+            sf = new MailSSLSocketFactory();
+            sf.setTrustAllHosts(true);
+        } catch (GeneralSecurityException e1) {
+            e1.printStackTrace();
+        }
+        props.put("mail.smtp.ssl.enable", "true");
+        props.put("mail.smtp.ssl.socketFactory", sf);
 
 
         // 构建授权信息，用于进行SMTP进行身份验证
