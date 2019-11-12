@@ -194,9 +194,12 @@ public class SetupController {
         pricePlan.setCcCard(formOb.getString("ccCard"));
         pricePlan.setCcExpDate(formOb.getString("ccExpDate"));
         pricePlan.setCcCsv(formOb.getString("ccCSV"));
+        String connectionId = UUID.randomUUID().toString().replaceAll("_","");
+        pricePlan.setConnectionId(connectionId);
         userDao.insertPricePlan(pricePlan);
 
         responseDto.setStatus(XeConsts.RESPONSE_STATUS_SUCCESS);
+        responseDto.setConnection_id(connectionId);
         return  responseDto;
     }
 }

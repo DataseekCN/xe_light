@@ -13,6 +13,16 @@ public class ResponseDto extends BaseVo {
 
     private List<AccountInfo> accounts;
 
+    private String connection_id;
+
+    public String getConnection_id() {
+        return connection_id;
+    }
+
+    public void setConnection_id(String connection_id) {
+        this.connection_id = connection_id;
+    }
+
     public List<AccountInfo> getAccounts() {
         return accounts;
     }
