@@ -1,7 +1,7 @@
 package com.dataseek.xe.entity;
 
 public class PricePlanInfo {
-    private String userId;
+    private String appAccount;
     private String etsyShopName;
     private String syncFromDate;
     private String custInfoHandle;
@@ -18,20 +18,20 @@ public class PricePlanInfo {
     private String ccCsv;
     private String connectionId;
 
+    public String getAppAccount() {
+        return appAccount;
+    }
+
+    public void setAppAccount(String appAccount) {
+        this.appAccount = appAccount;
+    }
+
     public String getConnectionId() {
         return connectionId;
     }
 
     public void setConnectionId(String connectionId) {
         this.connectionId = connectionId;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     public String getEtsyShopName() {

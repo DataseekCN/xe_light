@@ -179,7 +179,7 @@ public class SetupController {
         JSONObject formOb = json.getJSONObject("form");
 
         PricePlanInfo pricePlan = new PricePlanInfo();
-        pricePlan.setUserId(formOb.getString("userId"));
+        pricePlan.setAppAccount(formOb.getString("app_account"));
         pricePlan.setEtsyShopName(formOb.getString("etsyShopName"));
         pricePlan.setSyncFromDate(formOb.getString("syncFromDate"));
         pricePlan.setCustInfoHandle(formOb.getString("customerInfoHandle"));

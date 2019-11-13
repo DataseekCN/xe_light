@@ -95,13 +95,13 @@ public class UserDao implements IUserDao {
 
     public void insertPricePlan(PricePlanInfo pricePlanInfo) {
         StringBuilder sqlBd = new StringBuilder();
-        sqlBd.append("insert into price_plan_info(user_id,etsy_shop_name,sync_from_date,cust_info_handle,xero_sale_acct, ");
+        sqlBd.append("insert into price_plan_info(app_account,etsy_shop_name,sync_from_date,cust_info_handle,xero_sale_acct, ");
         sqlBd.append("xero_exps_acct,xero_ship_acct,list_handle,subs_plan,backup_opt,cc_name,cc_email,cc_card,cc_exp_date,cc_csv,connection_id) ");
-        sqlBd.append("values(:user_id,:etsy_shop_name,:sync_from_date,:cust_info_handle,:xero_sale_acct,:xero_exps_acct,");
+        sqlBd.append("values(:app_account,:etsy_shop_name,:sync_from_date,:cust_info_handle,:xero_sale_acct,:xero_exps_acct,");
         sqlBd.append(":xero_ship_acct,:list_handle,:subs_plan,:backup_opt,:cc_name,:cc_email,:cc_card,:cc_exp_date,:cc_csv,:connection_id)");
 
         MapSqlParameterSource mapParam = new MapSqlParameterSource();
-        mapParam.addValue("user_id", pricePlanInfo.getUserId());
+        mapParam.addValue("app_account", pricePlanInfo.getAppAccount());
         mapParam.addValue("etsy_shop_name", pricePlanInfo.getEtsyShopName());
         mapParam.addValue("sync_from_date", pricePlanInfo.getSyncFromDate());
         mapParam.addValue("cust_info_handle", pricePlanInfo.getCustInfoHandle());
