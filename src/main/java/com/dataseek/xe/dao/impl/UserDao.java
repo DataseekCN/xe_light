@@ -2,6 +2,7 @@ package com.dataseek.xe.dao.impl;
 
 import com.dataseek.xe.config.JdbcSupport;
 import com.dataseek.xe.dao.IUserDao;
+import com.dataseek.xe.entity.ConnectionInfo;
 import com.dataseek.xe.entity.InfoDetail;
 import com.dataseek.xe.entity.PricePlanInfo;
 import com.dataseek.xe.entity.UserInfo;
@@ -119,6 +120,21 @@ public class UserDao implements IUserDao {
         mapParam.addValue("connection_id", pricePlanInfo.getConnectionId());
 
         jdbcSupport.update(sqlBd.toString(), mapParam);
+    }
+
+    public PricePlanInfo qryConnection(String appAccount) {
+        MapSqlParameterSource mapParam = new MapSqlParameterSource();
+        PricePlanInfo reValue = null;
+        StringBuilder sqlBd = new StringBuilder();
+        sqlBd.append("select connection_id, etsy_shop_name from  price_plan_info ");
+        sqlBd.append("where app_account=:app_account");
+
+        mapParam.addValue("app_account", appAccount);
+        List<PricePlanInfo> reList = jdbcSupport.query(sqlBd.toString(), PricePlanInfo.class, mapParam);
+        if (reList != null && !reList.isEmpty()) {
+            reValue = reList.get(0);
+        }
+        return reValue;
     }
 
 }

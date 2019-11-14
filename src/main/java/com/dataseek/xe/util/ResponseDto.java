@@ -1,6 +1,7 @@
 package com.dataseek.xe.util;
 
 import com.dataseek.xe.entity.AccountInfo;
+import com.dataseek.xe.entity.ConnectionInfo;
 
 import java.util.List;
 
@@ -14,6 +15,16 @@ public class ResponseDto extends BaseVo {
     private List<AccountInfo> accounts;
 
     private String connection_id;
+
+    private List<ConnectionInfo> connections;
+
+    public List<ConnectionInfo> getConnections() {
+        return connections;
+    }
+
+    public void setConnections(List<ConnectionInfo> connections) {
+        this.connections = connections;
+    }
 
     public String getConnection_id() {
         return connection_id;

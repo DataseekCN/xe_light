@@ -3,13 +3,13 @@ package com.dataseek.xe.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dataseek.xe.dao.IOauthDao;
-import com.dataseek.xe.entity.OauthInfo;
-import com.dataseek.xe.entity.XeroDeveloperDetail;
-import com.dataseek.xe.entity.XeroTokenAdmin;
+import com.dataseek.xe.dao.IUserDao;
+import com.dataseek.xe.entity.*;
 import com.dataseek.xe.extend.apis.XeroVisitApi;
 import com.dataseek.xe.service.base.IOauthService;
 import com.dataseek.xe.util.AppConfig;
 import com.dataseek.xe.util.DateUtils;
+import com.dataseek.xe.util.ResponseDto;
 import com.dataseek.xe.util.XeConsts;
 import com.dataseek.xe.vo.OauthVo;
 import com.github.scribejava.core.model.OAuth2AccessToken;
@@ -17,6 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -29,6 +32,9 @@ public class OauthController {
 
     @Autowired
     private IOauthDao oauthDao;
+
+    @Autowired
+    private IUserDao userDao;
 
 	//验证用户etsy的token状态
     @RequestMapping(value="/etsy/token_verify",method = RequestMethod.GET)
@@ -189,5 +195,28 @@ public class OauthController {
             oauthVo.setStatus("fail");
         }
         return oauthVo;
+    }
+
+
+    @RequestMapping(value="/all",method = RequestMethod.GET)
+    public ResponseDto all(@RequestParam String app_account){
+        ResponseDto responseDto = new ResponseDto();
+        PricePlanInfo planInfo = userDao.qryConnection(app_account);
+        if (planInfo != null) {
+            responseDto.setStatus(XeConsts.RESPONSE_STATUS_SUCCESS);
+            List<ConnectionInfo> connections = new ArrayList<ConnectionInfo>();
+            ConnectionInfo conInfo = new ConnectionInfo();
+            conInfo.setConnection_id(planInfo.getConnectionId());
+            conInfo.setEtsy_shopname(planInfo.getEtsyShopName());
+            conInfo.setStatus("connected");
+            connections.add(conInfo);
+            responseDto.setConnections(connections);
+        }
+        else {
+            responseDto.setStatus(XeConsts.RESPONSE_STATUS_FAILURE);
+            responseDto.setError_message("");
+        }
+
+        return responseDto;
     }
 }

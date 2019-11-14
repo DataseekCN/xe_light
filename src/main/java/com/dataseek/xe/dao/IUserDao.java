@@ -18,4 +18,6 @@ public interface IUserDao {
 
     public void insertPricePlan(PricePlanInfo pricePlanInfo);
 
+    public PricePlanInfo qryConnection(String appAccount);
+
 }
