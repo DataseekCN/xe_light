@@ -55,7 +55,7 @@ public class SetupController {
     //private String apiKey = "78qwl864ty5269f469svn6md";
 
     @ApiOperation(value = "verify shopname")
-    @RequestMapping("/etzy/verifyshopname")
+    @RequestMapping("/etsy/verifyshopname")
     public ResponseDto verifyshopname(@RequestBody JSONObject json) {
         ResponseDto responseDto = new ResponseDto();
         String url = urlHead + "/shops/" + json.getString("shopname");
