@@ -53,7 +53,7 @@ public class XeAutoConfig {
     }
 
 
-    @Bean(name="xeDataSource")
+    @Bean(name="xeDataSource",initMethod = "init",destroyMethod = "close")
     public DruidDataSource initBasicDataSource(){
         DruidDataSource basicDataSource = new DruidDataSource();
         basicDataSource.setDriverClassName(xeProperties.getDriver());
