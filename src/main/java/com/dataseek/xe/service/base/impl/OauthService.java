@@ -51,7 +51,6 @@ public class OauthService implements IOauthService {
     private IOauthDao oauthDao;
 
     //验证Etsy的oauth授权情况
-    @Transactional(value= XeAutoConfig.DEFAULT_TX, rollbackFor=Exception.class)
     public OauthInfo verifyEtsyAuthStatus(String app_account){
         OauthInfo oauthInfo = null;
         //查询App开发者相关配置信息
@@ -108,7 +107,6 @@ public class OauthService implements IOauthService {
     }
 
     //申请access token并返回授权链接等信息
-    @Transactional(value= XeAutoConfig.DEFAULT_TX, rollbackFor=Exception.class)
     public OauthInfo applyEtsyAccessToken(String oauth_token, String oauth_verifier){
         OauthInfo oauthInfo = null;
         //查询App开发者相关配置信息
@@ -124,7 +122,6 @@ public class OauthService implements IOauthService {
     }
 
     //验证Xero的oauth授权情况
-    @Transactional(value= XeAutoConfig.DEFAULT_TX, rollbackFor=Exception.class)
     public OauthInfo verifyXeroAuthStatus(String app_account){
         OauthInfo oauthInfo = null;
         //查询App开发者相关配置信息
@@ -151,7 +148,6 @@ public class OauthService implements IOauthService {
 
     //申请xero的授权链接
     @Override
-    @Transactional(value= XeAutoConfig.DEFAULT_TX, rollbackFor=Exception.class)
     public String requestXeroAuthUrl(String app_account,XeroDeveloperDetail xeroDeveloperDetail){
         String auth_url=null;
         OAuth20Service service = XeroVisitApi.createXeroService(xeroDeveloperDetail);
@@ -176,7 +172,6 @@ public class OauthService implements IOauthService {
     }
 
     @Override
-    @Transactional(value= XeAutoConfig.DEFAULT_TX, rollbackFor=Exception.class)
     public void updateXeroAccessToken(XeroTokenAdmin xeroTokenAdmin) {
         oauthDao.deleteXeroTokenAdminByAppAccount(xeroTokenAdmin.getApp_account());
         oauthDao.insertXeroTokenAdmin(xeroTokenAdmin);
