@@ -1,8 +1,13 @@
-FROM openjdk:8-jdk-alpine
-ARG JAVA_OPTS
-ENV JAVA_OPTS=$JAVA_OPTS
-ADD target/xe_light-1.0-SNAPSHOT.jar xe_light.jar
+FROM java:7
+LABEL maintainer="DataseekCN"
+RUN apt-get update -qq && apt-get install -y maven && apt-get clean
+WORKDIR /app
+ADD pom.xml /app/pom.xml
+RUN ["mvn", "dependency:resolve"]
+RUN ["mvn", "verify"]
+
+ADD src /app/src
+RUN ["mvn", "package"]
 EXPOSE 12006
-# ENTRYPOINT exec java $JAVA_OPTS -jar xe_light.jar
-# For Spring-Boot project, use the entrypoint below to reduce Tomcat startup time.
-ENTRYPOINT exec java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar xe_light.jar
+
+CMD ["/usr/lib/jvm/java-7-openjdk-amd64/bin/java", "-jar", "target/worker-jar-with-dependencies.jar"]
