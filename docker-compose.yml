@@ -1,8 +1,9 @@
-version: '2.1'
+version: '3'
 
 services:
   xe_light:
-    image: xe_light
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - 12006:12006
